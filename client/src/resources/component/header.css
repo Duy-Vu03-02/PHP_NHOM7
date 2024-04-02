@@ -1,0 +1,176 @@
+.header-content {
+  position: relative;
+}
+.header {
+  background-color: #001529;
+  height: 65px;
+  width: 100vw;
+  justify-content: space-between;
+}
+footer {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  height: 50px;
+  background-color: white;
+  top: calc(100vh - 50px);
+  width: 100vw;
+}
+.footer {
+  display: block;
+  line-height: 50px;
+}
+.footer span {
+  margin: 0 5px;
+  align-items: center;
+  align-content: center;
+  line-height: 50px;
+}
+.copyright {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  margin: 0 5px;
+}
+.footer a {
+  color: #299af6;
+}
+.left-header,
+.right-header {
+  justify-content: center;
+  align-items: center;
+  margin: 0 40px;
+}
+.menu-header {
+  /* background-color: #299af6; */
+  height: 65px;
+  line-height: 60px;
+}
+.left-header a {
+  color: rgb(175, 174, 174);
+  font-size: 14px;
+  padding: 0 25px;
+  line-height: 65px;
+}
+.left-header a:hover {
+  background-color: #299af6;
+  color: white;
+  transition: background 0.3s, color 0.3s;
+}
+.left-header img {
+  width: 6%;
+  margin-right: 10px;
+}
+.right-header button {
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 15px;
+  margin-left: 20px;
+  background-color: #299af6;
+  opacity: 0.9;
+}
+.right-header button:hover {
+  opacity: 1;
+  transform: opacity 0.3s;
+}
+main {
+  max-width: 100vw;
+}
+.box-login {
+  padding: 25px;
+  width: 500px;
+  height: 250px;
+  border-radius: 3px;
+  position: relative;
+  margin-bottom: 100px;
+  background-color: white;
+}
+.bar-login {
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+.choie-login {
+  padding: 20px 0 10px 0;
+  display: block;
+  border: 1px solid rgb(225, 225, 225);
+  border-left: none;
+  border-right: none;
+}
+.choie-login > p,
+.dont-show p {
+  font-size: 13px;
+  text-align: center;
+}
+.choie-login .btn-gg,
+.choie-login .btn-face {
+  display: block;
+  margin: 15px auto 0 auto;
+  padding: 10px 15px 10px 40px;
+  border: none;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 160px;
+  text-align: left;
+  border-radius: 3px;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+  transition: box-shadow 0.3s;
+}
+.choie-login .btn-gg:hover,
+.btn-face:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.3s;
+}
+.choie-login .btn-face {
+  background-color: #3b5998;
+}
+.choie-login .icon-gg,
+.choie-login .icon-face {
+  margin-right: 5px;
+  font-size: 20px;
+  position: absolute;
+  left: 15px;
+}
+.btn-face span {
+  color: aliceblue;
+}
+.btn-gg span {
+  color: #757575;
+}
+.icon-face {
+  background-color: white;
+  color: #3b5998;
+}
+.dont-show {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.dont-show input {
+  width: 15px;
+  height: 15px;
+}
+.btn-close {
+  display: flex;
+  justify-content: right;
+}
+.box-login .btn-close button {
+  padding: 7px 20px;
+  border: none;
+  border-radius: 2px;
+  margin-top: 15px;
+  color: white;
+  font-size: 14px;
+  background-color: #299af6;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+.box-login .btn-close button:hover,
+.choie-login button:hover {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
