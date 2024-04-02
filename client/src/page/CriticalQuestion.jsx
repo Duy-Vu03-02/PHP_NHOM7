@@ -1,40 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../resources/criticalquestion.css";
-import background from "../data/png/background.png";
 import QuestionsTemplate from "../component/QuestionsTemplate";
 import { IoMdArrowBack } from "react-icons/io";
 
 export default function CriticalQuestion(props) {
+  const [listData, setListData] = useState([]);
+  const [resTemplate, setResTemplate] = useState(false);
   const handleClick = () => {
     props.unComponent();
   };
-  const store = {
-    id: 5,
-    question: "cuộc đua xe chỉ được thực hiện khi nào?",
-    img: background,
-    answer: [
-      "diễn ra trên đường phố không có người qua lại",
-      "được người dân ủng hộ",
-      "được cơ quan có thẩm quyền cấp phép",
-      "được sự cho phép của Đảng và Nhà nước",
-    ],
-    trueAnswer: 2,
+  const handleRes = () => {
+    setResTemplate(true);
   };
 
-  const store1 = { ...store };
-  store1.id = 4;
+  useEffect(() => {
+    const fetch = async () => {
+      const url =
+        "http://localhost/BaoCaoPHP/server/controllers/criticalQuestion/criticalQuestion.php";
+      const response = await axios.get(url);
 
-  const store2 = { ...store };
-  store2.id = 3;
-
-  const store3 = { ...store };
-  store3.id = 2;
-
-  const store4 = { ...store };
-  store4.id = 1;
-
-  const listData = [store, store1, store2, store3, store4];
-
+      if (response.status === 200) {
+        setListData(response.data);
+      }
+    };
+    fetch();
+  }, []);
+  console.log(listData);
   return (
     <>
       <div className="content-critical">
@@ -45,13 +37,17 @@ export default function CriticalQuestion(props) {
           </div>
           <div className="content-infor">
             <p>
-              Dưới đây là <b>20</b> câu điểm liệt dành cho hạng <b>A1</b>, trong
-              bài thi nếu làm sai sẽ bị đánh rớt
+              Dưới đây là <b>{listData.length}</b> câu điểm liệt dành cho hạng{" "}
+              <b>A1</b>, trong bài thi nếu làm sai sẽ bị đánh rớt
             </p>
           </div>
         </div>
         <div>
-          <QuestionsTemplate dataQuestion={listData} />
+          <QuestionsTemplate
+            dataQuestion={listData}
+            result={resTemplate}
+            handleReq={handleRes}
+          />
         </div>
       </div>
     </>
