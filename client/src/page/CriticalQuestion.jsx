@@ -26,7 +26,7 @@ export default function CriticalQuestion(props) {
     };
     fetch();
   }, []);
-  console.log(listData);
+
   return (
     <>
       <div className="content-critical">

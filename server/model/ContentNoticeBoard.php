@@ -1,5 +1,5 @@
 <?php
-    class NoticeBoard{
+    class ContentNoticeBoard{
         public $id;
         public $img;
         public $title;

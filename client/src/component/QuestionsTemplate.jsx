@@ -19,20 +19,18 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
     });
     setListData(data);
   }, [dataQuestion]);
-  // console.log(checkEffec.current);
+  console.log(listData);
   useEffect(() => {
     if (!checkEffec.current) {
       var count = 0;
       listData.forEach((element) => {
         if (element.selected === element.trueAnswer) count++;
       });
-      console.log(result);
       setShowCorrect(result);
       setShowScore({ state: result, score: count * 10 });
       // checkEffec.current = result;
     }
   }, [result]);
-  console.log(result);
 
   const handleResQuestion = () => {
     var count = 0;
@@ -81,7 +79,7 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
                 <div className="wrap-question">
                   <div className="question-infor flex">
                     <h5>Câu {index + 1}.&nbsp;</h5>
-                    <h5>{data.question}?</h5>
+                    <h5>{data.question}</h5>
                   </div>
                   {data.img ? (
                     <div className="img-illustration">
@@ -121,7 +119,7 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
                           />
 
                           <span>{z + 1}.&nbsp; </span>
-                          <p>{rep}.</p>
+                          <p>{rep}</p>
                         </li>
                       ))}
                     </ul>

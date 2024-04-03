@@ -99,7 +99,7 @@ function ShowType({ indexData }) {
   useEffect(() => {
     const fetch = async () => {
       const data = await axios.get(
-        `http://localhost/BaoCaoPHP/server/controllers/noticeBoard/detail.php?index=${indexData}`
+        `http://localhost/BaoCaoPHP/server/controllers/noticeBoard/contentNoticeBoard.php?index=${indexData}`
       );
       if (data.status === 200) {
         setListdata(data.data);

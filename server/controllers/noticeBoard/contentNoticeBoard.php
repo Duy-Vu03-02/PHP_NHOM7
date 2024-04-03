@@ -1,6 +1,6 @@
 <?php
     include "../../db/connect.php";
-    include "../../model/NoticeBoard.php";
+    include "../../model/ContentNoticeBoard.php";
 
     header("Access-Control-Allow-Origin: http://localhost:3000");
     header("Access-Control-Allow-Methods: GET, POST");
@@ -15,7 +15,7 @@
         
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
-                $data[] = new NoticeBoard($row);
+                $data[] = new ContentNoticeBoard($row);
             };
             echo json_encode($data);
         }
