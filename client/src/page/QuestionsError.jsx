@@ -9,6 +9,13 @@ import { IoMdArrowBack } from "react-icons/io";
 export default function QuesitionsError(props) {
   const [qsUser, setQsUser] = useState(true);
   const [resTemplate, setResTemplate] = useState([false, false]);
+  const [quesitonsUser, setQuestionsUser] = useState([]);
+  const [quesitonsPeople, setQuestionsPeople] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {};
+  }, []);
+
   const data = {
     id: 2,
     question:

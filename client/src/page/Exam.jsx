@@ -27,8 +27,6 @@ export default function Exam(props) {
     props.unComponent();
   };
   const handleShowExam = (data, index) => {
-    console.log(allExam);
-    console.log(data);
     setCurrentExam({
       index: index,
       data: data,

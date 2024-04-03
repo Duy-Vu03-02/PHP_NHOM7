@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../resources/allknowledge.css";
 import QuestionChapter from "../component/QuestionChapter";
+import QuestionsTemplate from "../component/QuestionsTemplate";
 import { IoMdArrowBack } from "react-icons/io";
 
 export default function AllKnowledge(props) {
@@ -92,6 +93,9 @@ function Lesson({ arrowBack, data }) {
     };
     fetch();
   }, []);
+
+  console.log(data.id);
+  console.log(listData);
   const handleClick = () => {
     arrowBack();
   };

@@ -16,12 +16,12 @@
   display: contents;
 }
 .wrap-list-question .img-illustration img {
+  margin-top: 10px;
   width: 500px;
 }
 .question-infor {
   border-bottom: 1px solid rgb(234, 232, 232);
   padding: 10px 0 15px 0;
-  margin-bottom: 10px;
 }
 .question-infor h5 {
   margin: 10px 0 0 0;

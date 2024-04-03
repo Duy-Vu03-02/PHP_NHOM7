@@ -19,8 +19,10 @@ export default function QuesitonTemplate({ dataQuestion }) {
     countMustTrue: 0,
     countTrueMustTrue: 0,
   });
+  const [questionsErr, setQuestionsErr] = useState([]);
+
   const indexQuestion = useRef(1);
-  console.log(listData);
+
   useEffect(() => {
     setCurrentQuestion(dataQuestion[0]);
     const fetch = async () => {
@@ -44,6 +46,18 @@ export default function QuesitonTemplate({ dataQuestion }) {
       });
     }
   }, [quesitons]);
+
+  useEffect(() => {
+    if (questionsErr.length > 1) {
+      localStorage.setItem("question_err", JSON.stringify(questionsErr));
+    }
+  }, [questionsErr]);
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("question_err"));
+    if (data !== null) {
+      setQuestionsErr(data);
+    }
+  }, []);
 
   const handleShowQuestion = (data, index) => {
     setCurrentQuestion(data);
@@ -72,6 +86,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     //handle auto next question
     handleAutoNextQuestion();
   };
+  console.log(questionsErr);
   const handleCalculatorScore = () => {
     handleTimeOut();
     var countTrue = 0;
@@ -79,6 +94,25 @@ export default function QuesitonTemplate({ dataQuestion }) {
     var countTrueMustTrue = 0;
     listData.forEach((element) => {
       if (element.selected === element.trueAnswer) countTrue++;
+      // Neu sai luu vao state qsErr -> save local
+      else {
+        // setQuestionsErr((prevState) => {
+        // if (prevState.length < 1) {
+        // return [{ id: element.id, count: 1 }];
+        // } else {
+        // const check = prevState.indexOf((item) => item.id === element.id);
+        // const check = prevState.includes((item) => item.id === element.id);
+        // console.log(typeof check + check);
+        // if (check !== -1) {
+        //   const newQsErr = [...prevState];
+        //   newQsErr[check].count += 1;
+        //   return newQsErr;
+        // } else {
+        //   return [...prevState, { id: element.id, count: 1 }];
+        // }
+        // }
+        // });
+      }
       if (element.mustCorrect === true) {
         countMustTrue++;
         if (element.selected === element.trueAnswer) {
