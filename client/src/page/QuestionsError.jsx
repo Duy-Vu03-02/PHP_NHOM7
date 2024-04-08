@@ -14,22 +14,40 @@ export default function QuesitionsError(props) {
   const [listDataUser, setListDataUser] = useState([]);
   const [listDataPeople, setListDataPeople] = useState([]);
 
+  // useEffect(() => {
+  //   localStorage.setItem(
+  //     "question_err",
+  //     JSON.stringify([
+  //       { id: 1, count: 1 },
+  //       { id: 2, count: 1 },
+  //     ])
+  //   );
+  // }, []);
+
   useEffect(() => {
     const fetch = async () => {
       const data = await JSON.parse(localStorage.getItem("question_err"));
-      let listId = data.map((item) => item.id);
-      const urlUser =
-        "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForUser.php";
-      const responseUser = await axios.get(urlUser + "?action=" + listId);
+      if (data !== null && data.length > 0) {
+        let listId = data.map((item) => item.id);
 
-      if (responseUser.status === 200) {
-        setListDataUser(responseUser.data);
+        const urlUser =
+          "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForUser.php";
+        const responseUser = await axios.get(urlUser + "?action=" + listId);
+        if (responseUser.status === 200) {
+          setListDataUser(responseUser.data);
+        }
       }
 
       const urlPeople =
         "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForPeople.php";
-    };
+      const responsePeople = await axios.get(urlPeople);
 
+      if (responsePeople.status === 200) {
+        setListDataPeople(responsePeople.data);
+      } else if (responsePeople.status === 204) {
+        setListDataPeople([]);
+      }
+    };
     fetch();
   }, []);
 
@@ -89,12 +107,12 @@ export default function QuesitionsError(props) {
           </div>
           <div className="title-intro">
             <p className={`infor-user ${qsUser ? "" : "none"}`}>
-              Dưới đây là <b>10</b> câu hay sai nhất thuộc hạng <b>A1</b> của
-              bạn.
+              Dưới đây là <b>{listDataUser ? listDataUser.length : "0"}</b> câu
+              hay sai nhất thuộc hạng <b>A1</b> của bạn.
             </p>
             <p className={`infor-people ${qsUser ? "none" : ""}`}>
-              Dưới đây là <b>50</b> câu hay sai nhất thuộc hạng <b>A1</b> trên
-              toàn hệ thống.
+              Dưới đây là <b>{listDataPeople ? listDataPeople.length : "0"}</b>{" "}
+              câu hay sai nhất thuộc hạng <b>A1</b> trên toàn hệ thống.
             </p>
           </div>
         </div>

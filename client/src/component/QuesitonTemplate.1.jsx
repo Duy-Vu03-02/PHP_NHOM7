@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../resources/component/questiontemplate.css";
 import { IoMdCheckmark } from "react-icons/io";
 import { LuClock } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
 import { FaRegStar } from "react-icons/fa6";
-import axios from "axios";
+import { Clock } from "./QuesitonTemplate";
 
-export default function QuesitonTemplate({ dataQuestion }) {
+export default function QuesitonTemplate({ dataQuestion, reqQsErr }) {
   const [listData, setListData] = useState([]);
   const [timeExam, setTimeExam] = useState(1140);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -78,25 +77,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
     handleAutoNextQuestion();
   };
   console.log(questionsErr);
-
-  const handleStoreQsErr = async () => {
-    // local
-    const dataLocal = await JSON.parse(localStorage.getItem("question_err"));
-    if (dataLocal !== null && dataLocal.length > 0) {
-    } else {
-      JSON.stringify(localStorage.setItem("question_err"), questionsErr);
-    }
-
-    // db
-    const listId = dataLocal.map((item) => item.id);
-    const url =
-      "http://localhost/BaoCaoPHP/server/controllers/questionsError/createQuestionsError.php";
-    const reponse = await axios.get(url + "?action=" + listId);
-    if (reponse.status === 200) {
-      console.log(reponse.status);
-    }
-  };
-
   const handleCalculatorScore = () => {
     handleTimeOut();
     var countTrue = 0;
@@ -134,7 +114,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     });
 
     // Send data -> questionError
-    handleStoreQsErr();
+    reqQsErr(questionsErr);
 
     // Show ket qua
     setScore((prevState) => {
@@ -345,63 +325,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
           </div>
           <div className="next-question"></div>
         </div>
-      </div>
-    </>
-  );
-}
-
-function Clock({ timer, timeOut }) {
-  const [timeRemaining, setTimeRemaining] = useState({
-    minute: 0,
-    second: 0,
-  });
-  const interval = useRef(null);
-
-  useEffect(() => {
-    setTimeRemaining({
-      minute: Math.floor(timer / 60),
-      second: Math.floor(timer % 60),
-    });
-  }, [timer]);
-
-  useEffect(() => {
-    interval.current = setInterval(() => {
-      setTimeRemaining((prevTime) => {
-        if (prevTime.second === 0) {
-          if (prevTime.minute < 1) {
-            timeOut();
-            clearInterval(interval.current);
-            return {
-              minute: 0,
-              second: 0,
-            };
-          } else {
-            return {
-              minute: prevTime.minute - 1,
-              second: 59,
-            };
-          }
-        } else {
-          return {
-            second: prevTime.second - 1,
-            minute: prevTime.minute,
-          };
-        }
-      });
-    }, 1000);
-    return () => clearInterval(interval.current);
-  }, []);
-
-  return (
-    <>
-      <div className="cpn">
-        {timeRemaining.minute < 10
-          ? "0" + timeRemaining.minute
-          : timeRemaining.minute}
-        :
-        {timeRemaining.second < 10
-          ? "0" + timeRemaining.second
-          : timeRemaining.second}
       </div>
     </>
   );

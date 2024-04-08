@@ -13,13 +13,15 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
   const checkEffec = useRef(false);
 
   useEffect(() => {
-    var data = dataQuestion;
-    data.forEach((element) => {
-      element.selected = false;
-    });
-    setListData(data);
+    if (dataQuestion !== null) {
+      var data = dataQuestion;
+      data.forEach((element) => {
+        element.selected = false;
+      });
+      setListData(data);
+    }
   }, [dataQuestion]);
-  console.log(listData);
+
   useEffect(() => {
     if (!checkEffec.current) {
       var count = 0;
@@ -131,7 +133,11 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
               </li>
             ))}
           </ul>
-          <div className="btn-submit-complete">
+          <div
+            className={`btn-submit-complete ${
+              listData.length > 0 ? "" : "none"
+            }`}
+          >
             <button onClick={handleReq}>Nộp bài</button>
           </div>
         </div>

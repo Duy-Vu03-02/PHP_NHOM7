@@ -9,7 +9,6 @@
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $action = isset($_GET["action"]) ? $_GET["action"] : "";
         $listID = explode(",", $action);
-        
         if(count($listID) > 0){
             $data = array();
 
@@ -20,14 +19,14 @@
                     while($row = $result->fetch_assoc()){
                         $data[] = new Question($row);
                     }
-                    
                 }
             }
-
+            http_response_code(200);
             echo json_encode($data);
         }
     }
     else{
+        http_response_code(405);
         echo json_encode(array("mess" => "Something went wrong"));
     }
 ?>
