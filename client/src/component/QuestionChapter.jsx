@@ -101,7 +101,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   };
 
   const handleChangeShowQs = (value) => {
-    if (value === true && indexQuestion.current < listData.length) {
+    if (value === true && indexQuestion.current < listData.length -1) {
       indexQuestion.current += 1;
       setCurrentQuestion(listData[indexQuestion.current]);
     } else if (value === false && indexQuestion.current > 0) {

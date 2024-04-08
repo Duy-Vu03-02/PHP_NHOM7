@@ -24,16 +24,18 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const indexQuestion = useRef(1);
 
   useEffect(() => {
-    setCurrentQuestion(dataQuestion[0]);
-    const fetch = async () => {
-      var data = await dataQuestion;
-      data.forEach((item, index) => {
-        item.selected = null;
-        item.zindex = index;
-      });
-      setListData(data);
-    };
-    fetch();
+    if (dataQuestion && dataQuestion !== null) {
+      setCurrentQuestion(dataQuestion[0]);
+      const fetch = async () => {
+        var data = await dataQuestion;
+        data.forEach((item, index) => {
+          item.selected = null;
+          item.zindex = index;
+        });
+        setListData(data);
+      };
+      fetch();
+    }
   }, [dataQuestion]);
 
   useEffect(() => {
@@ -86,7 +88,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     //handle auto next question
     handleAutoNextQuestion();
   };
-  console.log(questionsErr);
+
   const handleCalculatorScore = () => {
     handleTimeOut();
     var countTrue = 0;
@@ -96,22 +98,21 @@ export default function QuesitonTemplate({ dataQuestion }) {
       if (element.selected === element.trueAnswer) countTrue++;
       // Neu sai luu vao state qsErr -> save local
       else {
-        // setQuestionsErr((prevState) => {
-        // if (prevState.length < 1) {
-        // return [{ id: element.id, count: 1 }];
-        // } else {
-        // const check = prevState.indexOf((item) => item.id === element.id);
-        // const check = prevState.includes((item) => item.id === element.id);
-        // console.log(typeof check + check);
-        // if (check !== -1) {
-        //   const newQsErr = [...prevState];
-        //   newQsErr[check].count += 1;
-        //   return newQsErr;
-        // } else {
-        //   return [...prevState, { id: element.id, count: 1 }];
-        // }
-        // }
-        // });
+        if (questionsErr == null) {
+          setQuestionsErr({ id: element.id, count: 1 });
+        } else {
+          setQuestionsErr((prevState) => {
+            let check = prevState.includes((item) => item.id === element.id);
+            if (check) {
+              const newQsEr = prevState.filter(
+                (item) => item.id !== element.id
+              );
+              return newQsEr;
+            } else {
+              return [...prevState, { id: element.id, count: 1 }];
+            }
+          });
+        }
       }
       if (element.mustCorrect === true) {
         countMustTrue++;
