@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../resources/questionserror.css";
 import { FiUser } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
-import background from "../data/png/background.png";
 import QuestionsTemplate from "../component/QuestionsTemplate";
 import { IoMdArrowBack } from "react-icons/io";
 
@@ -11,54 +11,43 @@ export default function QuesitionsError(props) {
   const [resTemplate, setResTemplate] = useState([false, false]);
   const [quesitonsUser, setQuestionsUser] = useState([]);
   const [quesitonsPeople, setQuestionsPeople] = useState([]);
+  const [listDataUser, setListDataUser] = useState([]);
+  const [listDataPeople, setListDataPeople] = useState([]);
 
   useEffect(() => {
-    const fetch = async () => {};
+    const fetch = async () => {
+      const data = await JSON.parse(localStorage.getItem("question_err"));
+      let listId = data.map((item) => item.id);
+      const urlUser =
+        "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForUser.php";
+      const responseUser = await axios.get(urlUser + "?action=" + listId);
+
+      if (responseUser.status === 200) {
+        setListDataUser(responseUser.data);
+      }
+
+      const urlPeople =
+        "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForPeople.php";
+    };
+
+    fetch();
   }, []);
-
-  const data = {
-    id: 2,
-    question:
-      "khi đang lên dốc người ngồi trên xe mô tô có được phép kéo theo người đang điều khiển xe đạp hay không",
-    answer: [
-      "chỉ được phép nếu cả hai đội mũ bảo hiểm",
-      "không được phép",
-      "chỉ được phép thực hiện trên đường thật vắng",
-      "chỉ được phép khi người đi xe đạp đã quá mệt",
-    ],
-    trueAnswer: 3,
-  };
-  const listData = Array.from({ length: 10 }, () => data);
-
-  const data1 = {
-    id: 1,
-    question: "các xe đi theo thứ tự nào là đúng quy tắc giao thông đường bộ",
-    img: background,
-    answer: [
-      "xe của bạn, mô tô, xe con",
-      "xe con, xe của bạn, mô tô",
-      "mô tô, xe con, xe của bạn",
-      "chỉ được phép khi người đi xe đạp đã quá mệt",
-    ],
-    trueAnswer: 2,
-  };
-  const listData1 = Array.from({ length: 10 }, () => data1);
 
   const YourQuestionsError = (
     <QuestionsTemplate
-      dataQuestion={listData}
+      dataQuestion={listDataUser}
       result={resTemplate[0]}
       handleReq={() => handleRes(0)}
     />
   );
   const PeopleQuestionsError = (
     <QuestionsTemplate
-      dataQuestion={listData1}
+      dataQuestion={listDataPeople}
       result={resTemplate[1]}
       handleReq={() => handleRes(1)}
     />
   );
-  console.log(resTemplate);
+
   const handleRes = (index) => {
     setResTemplate((prevState) => {
       const newState = [...prevState];

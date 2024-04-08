@@ -5,7 +5,7 @@ import { LuClock } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
 import { FaRegStar } from "react-icons/fa6";
 
-export default function QuesitonTemplate({ dataQuestion }) {
+export default function QuesitonTemplate({ dataQuestion, reqQsErr }) {
   const [listData, setListData] = useState([]);
   const [timeExam, setTimeExam] = useState(1140);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -24,7 +24,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const indexQuestion = useRef(1);
 
   useEffect(() => {
-    if (dataQuestion && dataQuestion !== null) {
+    if (dataQuestion.length !== 0 && dataQuestion !== null) {
       setCurrentQuestion(dataQuestion[0]);
       const fetch = async () => {
         var data = await dataQuestion;
@@ -48,18 +48,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
       });
     }
   }, [quesitons]);
-
-  useEffect(() => {
-    if (questionsErr.length > 1) {
-      localStorage.setItem("question_err", JSON.stringify(questionsErr));
-    }
-  }, [questionsErr]);
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("question_err"));
-    if (data !== null) {
-      setQuestionsErr(data);
-    }
-  }, []);
 
   const handleShowQuestion = (data, index) => {
     setCurrentQuestion(data);
@@ -88,7 +76,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     //handle auto next question
     handleAutoNextQuestion();
   };
-
+  console.log(questionsErr);
   const handleCalculatorScore = () => {
     handleTimeOut();
     var countTrue = 0;
@@ -96,20 +84,23 @@ export default function QuesitonTemplate({ dataQuestion }) {
     var countTrueMustTrue = 0;
     listData.forEach((element) => {
       if (element.selected === element.trueAnswer) countTrue++;
-      // Neu sai luu vao state qsErr -> save local
+      // Neu sai luu vao state qsErr
       else {
-        if (questionsErr == null) {
-          setQuestionsErr({ id: element.id, count: 1 });
+        if (questionsErr.length === 0 && questionsErr === null) {
+          questionsErr([{ id: element.id, count: 1 }]);
         } else {
           setQuestionsErr((prevState) => {
-            let check = prevState.includes((item) => item.id === element.id);
+            var check = prevState.find((item) => item.id === element.id);
+
             if (check) {
-              const newQsEr = prevState.filter(
+              const newQsErr = [{ id: check.id, count: check.count + 1 }];
+              const qsErrFilter = prevState.filter(
                 (item) => item.id !== element.id
               );
-              return newQsEr;
+              return [...newQsErr, ...qsErrFilter];
             } else {
-              return [...prevState, { id: element.id, count: 1 }];
+              const newQsErr = [{ id: element.id, count: 1 }];
+              return [...newQsErr, ...prevState];
             }
           });
         }
@@ -122,6 +113,10 @@ export default function QuesitonTemplate({ dataQuestion }) {
       }
     });
 
+    // Send data -> questionError
+    reqQsErr(questionsErr);
+
+    // Show ket qua
     setScore((prevState) => {
       return {
         ...prevState,
@@ -159,7 +154,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const handle = () => {};
   return (
     <>
-      <div className="question-template">
+      {/* <div className="question-template">
         <div>
           <div className="conten-domain flex">
             <div className="left-temp">
@@ -330,7 +325,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
           </div>
           <div className="next-question"></div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
