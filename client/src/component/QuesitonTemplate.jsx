@@ -72,8 +72,25 @@ export default function QuesitonTemplate({ dataQuestion }) {
         const dataLocal = await JSON.parse(
           localStorage.getItem("question_err")
         );
+        // set local khi rong
         if (dataLocal === null) {
           localStorage.setItem("question_err", JSON.stringify(questionsErr));
+        }
+        // Set local khi da co data
+        else {
+          var tempQsErr = questionsErr.map((item) => ({ ...item }));
+          if (dataLocal !== null && dataLocal.length > 0) {
+            dataLocal.forEach((element) => {
+              var check = tempQsErr.find((item) => item.id === element.id);
+              if (check) {
+                element.count += 1;
+                tempQsErr.filter((item) => item.id !== element.id);
+              }
+            });
+
+            const newDataLocal = [...dataLocal, ...tempQsErr];
+            localStorage.setItem("question_err", JSON.stringify(newDataLocal));
+          }
         }
       }
     };
@@ -106,32 +123,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
 
     //handle auto next question
     handleAutoNextQuestion();
-  };
-  console.log(questionsErr);
-
-  const handleStoreLocalQsErr = async () => {
-    const dataLocal = await JSON.parse(localStorage.getItem("question_err"));
-    if (dataLocal !== null && dataLocal.length > 0) {
-      console.log("lua chon 1");
-      dataLocal.forEach((element) => {
-        setQsErrLocal((prevState) => {
-          for (let i = 0; i < questionsErr.length; i++) {
-            var check = prevState.find((item) => item.id === element.id);
-
-            if (check) {
-              const newQsErr = [{ id: check.id, count: check.count + 1 }];
-              const qsErrFilter = prevState.filter(
-                (item) => item.id !== element.id
-              );
-              return [...newQsErr, ...qsErrFilter];
-            } else {
-              const newQsErr = [{ id: element.id, count: 1 }];
-              return [...newQsErr, ...prevState];
-            }
-          }
-        });
-      });
-    }
   };
 
   const handleCalculatorScore = () => {
@@ -169,9 +160,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
         }
       }
     });
-
-    // Send data -> questionError
-    handleStoreLocalQsErr();
 
     // Show ket qua
     setScore((prevState) => {

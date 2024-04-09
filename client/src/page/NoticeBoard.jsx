@@ -7,10 +7,10 @@ import { IoMdArrowBack } from "react-icons/io";
 export default function NoticeBoard(props) {
   const [listData, setListData] = useState([]);
   const [show, setShow] = useState({
-    state: [],
+    state: ["5"],
     index: [],
   });
-
+  console.log(show);
   useEffect(() => {
     const fetch = async () => {
       const data = await axios.post(
