@@ -21,6 +21,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     countTrueMustTrue: 0,
   });
   const [questionsErr, setQuestionsErr] = useState([]);
+  const [qsErrLocal, setQsErrLocal] = useState([]);
 
   const indexQuestion = useRef(1);
 
@@ -49,6 +50,35 @@ export default function QuesitonTemplate({ dataQuestion }) {
       });
     }
   }, [quesitons]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (score.show) {
+        const listId = questionsErr.map((item) => item.id);
+        const url =
+          "http://localhost/BaoCaoPHP/server/controllers/questionsError/createQuestionsError.php";
+        const reponse = await axios.get(url + "?action=" + listId);
+        if (reponse.status === 200) {
+          console.log(reponse.status);
+        }
+      }
+    };
+    fetch();
+  }, [score.show]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (score.show) {
+        const dataLocal = await JSON.parse(
+          localStorage.getItem("question_err")
+        );
+        if (dataLocal === null) {
+          localStorage.setItem("question_err", JSON.stringify(questionsErr));
+        }
+      }
+    };
+    fetch();
+  }, [score.show]);
 
   const handleShowQuestion = (data, index) => {
     setCurrentQuestion(data);
@@ -79,21 +109,28 @@ export default function QuesitonTemplate({ dataQuestion }) {
   };
   console.log(questionsErr);
 
-  const handleStoreQsErr = async () => {
-    // local
+  const handleStoreLocalQsErr = async () => {
     const dataLocal = await JSON.parse(localStorage.getItem("question_err"));
     if (dataLocal !== null && dataLocal.length > 0) {
-    } else {
-      JSON.stringify(localStorage.setItem("question_err"), questionsErr);
-    }
+      console.log("lua chon 1");
+      dataLocal.forEach((element) => {
+        setQsErrLocal((prevState) => {
+          for (let i = 0; i < questionsErr.length; i++) {
+            var check = prevState.find((item) => item.id === element.id);
 
-    // db
-    const listId = dataLocal.map((item) => item.id);
-    const url =
-      "http://localhost/BaoCaoPHP/server/controllers/questionsError/createQuestionsError.php";
-    const reponse = await axios.get(url + "?action=" + listId);
-    if (reponse.status === 200) {
-      console.log(reponse.status);
+            if (check) {
+              const newQsErr = [{ id: check.id, count: check.count + 1 }];
+              const qsErrFilter = prevState.filter(
+                (item) => item.id !== element.id
+              );
+              return [...newQsErr, ...qsErrFilter];
+            } else {
+              const newQsErr = [{ id: element.id, count: 1 }];
+              return [...newQsErr, ...prevState];
+            }
+          }
+        });
+      });
     }
   };
 
@@ -134,7 +171,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     });
 
     // Send data -> questionError
-    handleStoreQsErr();
+    handleStoreLocalQsErr();
 
     // Show ket qua
     setScore((prevState) => {

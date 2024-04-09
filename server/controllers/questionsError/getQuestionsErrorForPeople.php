@@ -7,9 +7,10 @@
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $select = "SELECT * FROM question 
+        $select = "SELECT  * FROM question 
             inner join questionserror on question.id = questionserror.questionid
-            where question.id = questionserror.questionid";
+            ORDER BY questionserror.totaltimes DESC
+            LIMIT 25";
         $result = $conn->query($select);
         $data = array();
         if($result->num_rows > 0){

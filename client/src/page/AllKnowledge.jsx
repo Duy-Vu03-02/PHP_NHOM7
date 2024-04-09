@@ -94,8 +94,6 @@ function Lesson({ arrowBack, data }) {
     fetch();
   }, []);
 
-  console.log(data.id);
-  console.log(listData);
   const handleClick = () => {
     arrowBack();
   };
