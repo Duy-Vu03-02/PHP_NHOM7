@@ -75,6 +75,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
         // set local khi rong
         if (dataLocal === null) {
           localStorage.setItem("question_err", JSON.stringify(questionsErr));
+          return;
         }
         // Set local khi da co data
         else {
@@ -84,12 +85,16 @@ export default function QuesitonTemplate({ dataQuestion }) {
               var check = tempQsErr.find((item) => item.id === element.id);
               if (check) {
                 element.count += 1;
-                tempQsErr.filter((item) => item.id !== element.id);
+                tempQsErr = tempQsErr.filter((item) => item.id !== element.id);
               }
             });
 
-            const newDataLocal = [...dataLocal, ...tempQsErr];
-            localStorage.setItem("question_err", JSON.stringify(newDataLocal));
+            const newDataLocal = [...tempQsErr, ...dataLocal];
+            const filterNewDataLocal = newDataLocal.splice(0, 24);
+            localStorage.setItem(
+              "question_err",
+              JSON.stringify(filterNewDataLocal)
+            );
           }
         }
       }

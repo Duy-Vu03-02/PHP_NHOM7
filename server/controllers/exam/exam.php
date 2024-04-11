@@ -6,6 +6,7 @@
     header("Access-Control-Allow-Methods: GET, POST");
     header("Content-Type: application/json");
 
+
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $selectTotalExam = "SELECT COUNT(*)  FROM exam";
         $result = $conn->query($selectTotalExam);
@@ -26,7 +27,7 @@
         global $conn;
         $data = array();
         for($i=1; $i<$length+1; $i++){
-            $select = "SELECT * FROM question where question_exam = $i LIMIT 5";
+            $select = "SELECT * FROM question where question_exam = $i";
             $result = $conn->query($select);
             $temp = array();
             if($result->num_rows > 0){

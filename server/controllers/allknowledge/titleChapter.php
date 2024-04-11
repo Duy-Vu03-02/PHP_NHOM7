@@ -6,6 +6,7 @@
     header("Access-Control-Allow-Methods: GET, POST");
     header("Content-Type: application/json");
 
+
     if($_SERVER["REQUEST_METHOD"]  === "GET"){
         $select = "SELECT * FROM chapter";
         $result = $conn->query($select);

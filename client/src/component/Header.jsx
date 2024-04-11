@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
 import logo from "../data/png/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../resources/component/header.css";
+import { FiLogOut } from "react-icons/fi";
+import { FiSettings } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import { RiFacebookBoxFill } from "react-icons/ri";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { FaFacebook } from "react-icons/fa";
+import FacebookLogin from "react-facebook-login";
 
 export default function Header() {
-  const [boxLogin, setBoxLogin] = useState("");
+  const navigate = useNavigate();
+  const [boxLogin, setBoxLogin] = useState(false);
   const [checkbox, setCheckBox] = useState(false);
+  const [dataUser, setDataUser] = useState(null);
+  const [dataLocal, setDataLocal] = useState(null);
+
+  const storeLocal = (data) => {
+    if (data !== null) {
+      localStorage.setItem("acc", JSON.stringify(data));
+    }
+    setDataLocal(data);
+  };
+
   useEffect(() => {
     const fetch = async () => {
       const res = await JSON.parse(localStorage.getItem("showLogin"));
-      if (res === false) {
+      const data = await JSON.parse(localStorage.getItem("acc"));
+      if (data !== null) {
+        setDataLocal(data);
+      } else if (res === false) {
         setCheckBox(true);
         setBoxLogin(false);
-      } else {
+      } else if (res !== false && dataLocal === null) {
         setBoxLogin(true);
       }
     };
     fetch();
   }, []);
+
   const handleCheckBox = () => {
     checkbox ? setCheckBox(false) : setCheckBox(true);
     handleDontShow(checkbox);
@@ -30,6 +51,11 @@ export default function Header() {
   };
   const handleDontShow = (value) => {
     localStorage.setItem("showLogin", JSON.stringify(value));
+  };
+  const handleLogout = () => {
+    localStorage.clear();
+    // navigate("/");
+    window.history.go();
   };
 
   const handle = () => {};
@@ -46,7 +72,24 @@ export default function Header() {
           </div>
           <div className="right-header flex">
             <button>Hạng GPLX: A1</button>
-            <button onClick={() => handleBoxLogin(true)}>Đăng nhập</button>
+            {dataUser === null && dataLocal === null ? (
+              <button onClick={() => handleBoxLogin(true)}>Đăng nhập</button>
+            ) : (
+              <div className="user-info flex">
+                <img src={dataLocal.picture} />
+                <p>{dataLocal.name}</p>
+                <div className="box-logout">
+                  <div className="flex">
+                    <FiSettings className="icon-setting" />
+                    <p>Quản lý tài khoản</p>
+                  </div>
+                  <div className="flex" onClick={handleLogout}>
+                    <FiLogOut className="icon-logout" />
+                    <p>Đăng xuất</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         {boxLogin ? (
@@ -65,12 +108,73 @@ export default function Header() {
                   các thiết bị của bạn.
                 </p>
                 <div className="btn-gg flex">
-                  <FcGoogle className="icon-gg " />
-                  <span>Sign in with Google</span>
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      if (credentialResponse.credential !== null) {
+                        const decode = jwtDecode(credentialResponse.credential);
+                        const data = {
+                          provider: "gmail",
+                          name: decode.name,
+                          email: decode.email ? decode.email : null,
+                          picture: decode.picture ? decode.picture : null,
+                          userID: decode.userID,
+                        };
+                        setDataUser(data);
+                        storeLocal({
+                          name: data.name,
+                          picture: decode.picture,
+                        });
+                        setBoxLogin(false);
+                      }
+                    }}
+                    onError={() => {
+                      setDataUser(null);
+                      setBoxLogin(true);
+                    }}
+                  />
                 </div>
                 <div className="btn-face flex">
-                  <RiFacebookBoxFill className="icon-face" />
-                  <span>Sign in with Facebook</span>
+                  <FacebookLogin
+                    appId="701802418590275"
+                    autoLoad={true}
+                    fields="name,email,picture"
+                    icon={
+                      <FaFacebook
+                        style={{
+                          background: "#3b5998",
+                          color: "white",
+                          margin: "0 5px",
+                          fontSize: "25px",
+                        }}
+                      />
+                    }
+                    callback={(response) => {
+                      if (
+                        response.status !== "unknown" &&
+                        response.data !== null
+                      ) {
+                        const data = {
+                          provider: "facebook",
+                          name: response.name,
+                          email: response.email,
+                          picture: response.picture
+                            ? response.picture.data.url
+                            : null,
+                          userID: response.userID,
+                        };
+                        setDataUser(data);
+                        storeLocal({
+                          name: data.name,
+                          picture: data.picture,
+                        });
+                        setBoxLogin(false);
+                      } else {
+                        setDataUser(null);
+                        setCheckBox(true);
+                      }
+                    }}
+                    cssClass="my-facebook-button-class"
+                  />
                 </div>
                 <div className="dont-show flex" onClick={handleCheckBox}>
                   <input

@@ -6,6 +6,7 @@
     header("Access-Control-Allow-Methods: GET, POST");
     header("Content-type: application/json");
 
+
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $select = "SELECT * FROM question where critical = 1";
         $result = $conn->query($select);

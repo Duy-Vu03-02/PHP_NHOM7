@@ -74,6 +74,66 @@ footer {
   opacity: 1;
   transform: opacity 0.3s;
 }
+.right-header img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 8px;
+}
+.right-header p {
+  line-height: 35px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  padding-right: 8px;
+}
+.right-header > div {
+  align-items: center;
+  cursor: pointer;
+  padding: 3px;
+  margin: 0 10px;
+  border-radius: 20px;
+  transition: background-color 0.5s;
+}
+.right-header > div:hover {
+  background-color: #154c79;
+  transition: background-color 0.3s;
+}
+.right-header {
+  position: relative;
+}
+
+.right-header .box-logout {
+  display: none;
+  position: absolute;
+  left: 125px;
+  top: 53px;
+  width: 180px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 5px;
+}
+.user-info:hover .box-logout {
+  display: block;
+}
+.box-logout > div {
+  /* margin: 0 10px; */
+  border-bottom: 1px solid rgb(241, 235, 235);
+}
+.box-logout > div:hover {
+  background-color: #deecfb;
+  border-radius: 10px;
+}
+.box-logout p {
+  color: black;
+  line-height: 35px;
+}
+.box-logout .icon-logout,
+.box-logout .icon-setting {
+  height: 35px;
+  padding: 0 5px 0 15px;
+}
+
 main {
   max-width: 100vw;
 }
@@ -104,30 +164,33 @@ main {
 }
 .choie-login .btn-gg,
 .choie-login .btn-face {
-  display: block;
-  margin: 15px auto 0 auto;
-  padding: 10px 15px 10px 40px;
+  display: flex;
+  justify-content: center;
+  margin: 10px 0px;
+}
+.choie-login .btn-face button {
+  background-color: #3b5998;
   border: none;
-  background-color: white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  width: 160px;
-  text-align: left;
-  border-radius: 3px;
-  opacity: 0.9;
-  transition: opacity 0.3s;
+  color: white;
   font-size: 14px;
-  cursor: pointer;
+  flex: left;
+  line-height: 37px;
+}
+.btn-face span {
   position: relative;
-  font-weight: 500;
-  transition: box-shadow 0.3s;
 }
-.choie-login .btn-gg:hover,
-.btn-face:hover {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-  transition: box-shadow 0.3s;
+.btn-face button svg {
+  position: absolute;
+  left: -32px;
+  top: 7px;
 }
+
 .choie-login .btn-face {
   background-color: #3b5998;
+  border-radius: 5px;
+  height: 40px;
+  width: 213px;
+  margin: auto;
 }
 .choie-login .icon-gg,
 .choie-login .icon-face {
@@ -136,16 +199,7 @@ main {
   position: absolute;
   left: 15px;
 }
-.btn-face span {
-  color: aliceblue;
-}
-.btn-gg span {
-  color: #757575;
-}
-.icon-face {
-  background-color: white;
-  color: #3b5998;
-}
+
 .dont-show {
   margin-top: 10px;
   margin-bottom: 0;
