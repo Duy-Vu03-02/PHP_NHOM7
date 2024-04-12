@@ -19,27 +19,38 @@ export default function Header() {
   const [dataLocal, setDataLocal] = useState(null);
   const [showSetting, setShowSetting] = useState(false);
 
+  // useEffect(() => {
+  //   const fetch = () => {
+  //     const data = {
+  //       name: "Ngo duy vu",
+  //       email: "vungovu00@gmail.com",
+  //       picture: "http://localhost/description4.png",
+  //     };
+  //     localStorage.setItem("acc", JSON.stringify(data));
+  //     data.provider = "facebook";
+  //     console.log(data);
+  //     storeDB(data);
+  //   };
+
+  //   fetch();
+  // }, []);
+
   const storeLocal = (data) => {
     if (data !== null) {
-      console.log(data);
       localStorage.setItem("acc", JSON.stringify(data));
     }
     setDataLocal(data);
   };
-  const storeDB = async (data) => {};
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const url =
-          "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
-        const data = await axios.post(url, { key: "value" });
-        console.log(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetch();
-  }, []);
+  const storeDB = async (data) => {
+    const url =
+      "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
+    try {
+      const response = await axios.post(url, data);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -116,7 +127,9 @@ export default function Header() {
                     <input
                       type="text"
                       name="email"
-                      placeholder={dataLocal.email}
+                      placeholder={
+                        dataLocal.email ? dataLocal.email : "Nhập email"
+                      }
                     />
                   </div>
                   <div className="change-avartar flex">
@@ -171,7 +184,7 @@ export default function Header() {
               <button onClick={() => handleBoxLogin(true)}>Đăng nhập</button>
             ) : (
               <div className="user-info flex">
-                <img src={dataLocal.picture} />
+                <img src={dataLocal.picture} alt="img-avatar" />
                 <p>{dataLocal.name}</p>
                 <div className="box-logout">
                   <div className="flex" onClick={() => handleShowSetting(true)}>
@@ -212,7 +225,7 @@ export default function Header() {
                           name: decode.name,
                           email: decode.email ? decode.email : null,
                           picture: decode.picture ? decode.picture : null,
-                          userID: decode.userID ? decode.userID : null,
+                          userID: null,
                         };
                         setDataUser(data);
                         storeDB(data);
@@ -221,7 +234,7 @@ export default function Header() {
                           email: data.email,
                           name: data.name,
                           picture: decode.picture,
-                          userID: decode.userID ? decode.userID : null,
+                          userID: null,
                         });
                         setBoxLogin(false);
                       }
