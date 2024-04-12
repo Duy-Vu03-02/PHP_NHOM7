@@ -123,6 +123,7 @@
   opacity: 1;
   transition: opacity 0.3s;
 }
+.header-setting .icon-close,
 .box-score .icon-close,
 .bar-login .icon-close {
   position: absolute;
@@ -137,6 +138,7 @@
   transition: background-color 0.5s, color 0.5s;
   cursor: pointer;
 }
+.header-setting .icon-close:hover,
 .box-score .icon-close:hover,
 .bar-login .icon-close:hover {
   background-color: #299af6;

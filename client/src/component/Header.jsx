@@ -5,8 +5,6 @@ import "../resources/component/header.css";
 import { FiLogOut } from "react-icons/fi";
 import { FiSettings } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
-import { RiFacebookBoxFill } from "react-icons/ri";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { FaFacebook } from "react-icons/fa";
@@ -18,6 +16,7 @@ export default function Header() {
   const [checkbox, setCheckBox] = useState(false);
   const [dataUser, setDataUser] = useState(null);
   const [dataLocal, setDataLocal] = useState(null);
+  const [showSetting, setShowSetting] = useState(false);
 
   const storeLocal = (data) => {
     if (data !== null) {
@@ -57,11 +56,91 @@ export default function Header() {
     // navigate("/");
     window.history.go();
   };
+  const handleShowSetting = (value) => {
+    setShowSetting(value);
+  };
 
   const handle = () => {};
   return (
     <>
       <div className="header-content">
+        <div className={`${showSetting ? "screen-mask" : ""}`}></div>
+        {showSetting ? (
+          <div className="box-setting-user">
+            <div className="header-setting flex">
+              <div className="flex">
+                <FiSettings className="icon-setting" />
+                <h4>Quản lý tài khoản</h4>
+              </div>
+              <div>
+                <IoMdClose
+                  className="icon-close"
+                  onClick={() => handleShowSetting(false)}
+                />
+              </div>
+            </div>
+            <div className="content-setting flex">
+              <div className="info-user">
+                <img src={dataLocal.picture} alt="" />
+                <p>{dataLocal.name}</p>
+              </div>
+              <div className="change-info">
+                <h4>Cập nhật thông tin cá nhân</h4>
+                <div className="change-detail">
+                  <div className="change-name flex">
+                    <p>Họ và tên: </p>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder={dataLocal.name}
+                    />
+                  </div>
+                  <div className="change-email flex">
+                    <p>Email: </p>
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder={dataLocal.email}
+                    />
+                  </div>
+                  <div className="change-avartar flex">
+                    <p>Avatar: </p>
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder="Nhập url avatar"
+                    />
+                  </div>
+                  <div className="change-acount flex">
+                    <p>Account: </p>
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder="Nhập tài khoản"
+                    />
+                  </div>
+                  <div className="change-password flex">
+                    <p>Password: </p>
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder="Nhập mật khẩu"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="footer-setting">
+              <div className="btn-close">
+                <button onClick={() => handleShowSetting(false)}>
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="header flex">
           <div className="left-header flex">
             <img src={logo} alt="logo" />
@@ -79,7 +158,7 @@ export default function Header() {
                 <img src={dataLocal.picture} />
                 <p>{dataLocal.name}</p>
                 <div className="box-logout">
-                  <div className="flex">
+                  <div className="flex" onClick={() => handleShowSetting(true)}>
                     <FiSettings className="icon-setting" />
                     <p>Quản lý tài khoản</p>
                   </div>
@@ -117,10 +196,11 @@ export default function Header() {
                           name: decode.name,
                           email: decode.email ? decode.email : null,
                           picture: decode.picture ? decode.picture : null,
-                          userID: decode.userID,
+                          userID: decode.userID ? decode.userID : null,
                         };
                         setDataUser(data);
                         storeLocal({
+                          email: data.email,
                           name: data.name,
                           picture: decode.picture,
                         });
@@ -156,7 +236,7 @@ export default function Header() {
                         const data = {
                           provider: "facebook",
                           name: response.name,
-                          email: response.email,
+                          email: response.email ? response.email : null,
                           picture: response.picture
                             ? response.picture.data.url
                             : null,
@@ -164,6 +244,7 @@ export default function Header() {
                         };
                         setDataUser(data);
                         storeLocal({
+                          email: data.email,
                           name: data.name,
                           picture: data.picture,
                         });
