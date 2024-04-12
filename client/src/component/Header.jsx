@@ -9,6 +9,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { FaFacebook } from "react-icons/fa";
 import FacebookLogin from "react-facebook-login";
+import axios from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,10 +21,25 @@ export default function Header() {
 
   const storeLocal = (data) => {
     if (data !== null) {
+      console.log(data);
       localStorage.setItem("acc", JSON.stringify(data));
     }
     setDataLocal(data);
   };
+  const storeDB = async (data) => {};
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const url =
+          "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
+        const data = await axios.post(url, { key: "value" });
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetch();
+  }, []);
 
   useEffect(() => {
     const fetch = async () => {
@@ -107,7 +123,7 @@ export default function Header() {
                     <p>Avatar: </p>
                     <input
                       type="text"
-                      name="email"
+                      name="avatar"
                       placeholder="Nhập url avatar"
                     />
                   </div>
@@ -115,7 +131,7 @@ export default function Header() {
                     <p>Account: </p>
                     <input
                       type="text"
-                      name="email"
+                      name="account"
                       placeholder="Nhập tài khoản"
                     />
                   </div>
@@ -123,7 +139,7 @@ export default function Header() {
                     <p>Password: </p>
                     <input
                       type="text"
-                      name="email"
+                      name="password"
                       placeholder="Nhập mật khẩu"
                     />
                   </div>
@@ -192,17 +208,20 @@ export default function Header() {
                       if (credentialResponse.credential !== null) {
                         const decode = jwtDecode(credentialResponse.credential);
                         const data = {
-                          provider: "gmail",
+                          provider: "email",
                           name: decode.name,
                           email: decode.email ? decode.email : null,
                           picture: decode.picture ? decode.picture : null,
                           userID: decode.userID ? decode.userID : null,
                         };
                         setDataUser(data);
+                        storeDB(data);
                         storeLocal({
+                          provider: data.provider,
                           email: data.email,
                           name: data.name,
                           picture: decode.picture,
+                          userID: decode.userID ? decode.userID : null,
                         });
                         setBoxLogin(false);
                       }
@@ -236,17 +255,20 @@ export default function Header() {
                         const data = {
                           provider: "facebook",
                           name: response.name,
-                          email: response.email ? response.email : null,
+                          email: null,
                           picture: response.picture
                             ? response.picture.data.url
                             : null,
                           userID: response.userID,
                         };
                         setDataUser(data);
+                        storeDB(data);
                         storeLocal({
-                          email: data.email,
+                          provider: data.provider,
+                          email: null,
                           name: data.name,
                           picture: data.picture,
+                          userID: data.userID,
                         });
                         setBoxLogin(false);
                       } else {

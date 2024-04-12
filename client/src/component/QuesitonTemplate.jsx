@@ -11,6 +11,8 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const [timeExam, setTimeExam] = useState(1140);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [quesitons, setQuestions] = useState([]);
+  const [questionsErr, setQuestionsErr] = useState([]); // qs err cua exam hien tai
+  const indexQuestion = useRef(1);
   const [autoNextQs, setAutoNextQs] = useState(true);
   const [score, setScore] = useState({
     state: false,
@@ -20,10 +22,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
     countMustTrue: 0,
     countTrueMustTrue: 0,
   });
-  const [questionsErr, setQuestionsErr] = useState([]);
-  const [qsErrLocal, setQsErrLocal] = useState([]);
-
-  const indexQuestion = useRef(1);
 
   useEffect(() => {
     if (dataQuestion.length !== 0 && dataQuestion !== null) {
@@ -54,12 +52,35 @@ export default function QuesitonTemplate({ dataQuestion }) {
   useEffect(() => {
     const fetch = async () => {
       if (score.show) {
+        // update ques err
         const listId = questionsErr.map((item) => item.id);
         const url =
           "http://localhost/BaoCaoPHP/server/controllers/questionsError/createQuestionsError.php";
-        const reponse = await axios.get(url + "?action=" + listId);
-        if (reponse.status === 200) {
-          console.log(reponse.status);
+        await axios.get(url + "?action=" + listId);
+
+        //  update ques err by user
+        const dataLocal = await JSON.parse(localStorage.getItem("acc"));
+        if (dataLocal.email !== null || dataLocal.userID !== null) {
+          const url =
+            "http://localhost/BaoCaoPHP/server/controllers/user/updateQsErrByUser.php";
+          const data = {
+            email: dataLocal.email,
+            userID: dataLocal.userID,
+            listID: listId,
+            provider: dataLocal.provider,
+          };
+          const response = await axios.get(
+            url +
+              "?provider=" +
+              data.provider +
+              "&email=" +
+              data.email +
+              "&userID=" +
+              data.userID +
+              "&listID=" +
+              data.listID
+          );
+          console.log(response);
         }
       }
     };
