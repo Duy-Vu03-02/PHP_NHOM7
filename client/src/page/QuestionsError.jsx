@@ -29,7 +29,7 @@ export default function QuesitionsError(props) {
       const data = await JSON.parse(localStorage.getItem("question_err"));
       if (data !== null && data.length > 0) {
         let listId = data.map((item) => item.id);
-
+        listId = listId.length > 25 ? listId.splice(0, 25) : listId;
         const urlUser =
           "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForUser.php";
         const responseUser = await axios.get(urlUser + "?action=" + listId);
@@ -41,7 +41,6 @@ export default function QuesitionsError(props) {
       const urlPeople =
         "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForPeople.php";
       const responsePeople = await axios.get(urlPeople);
-
       if (responsePeople.status === 200) {
         setListDataPeople(responsePeople.data);
       } else if (responsePeople.status === 204) {

@@ -46,12 +46,11 @@ export default function Header() {
       "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
     try {
       const response = await axios.post(url, data);
-      if (response.data === null || response.data === undefined) {
+      if (response.data !== null || response.data !== undefined) {
         let resData = JSON.parse(response.data.questionerr);
         resData = resData.map((item) => ({ id: parseInt(item), count: 1 }));
-        localStorage.setItem("questionerr", JSON.stringify(resData));
-      } else {
-        localStorage.setItem("questionerr", "");
+        resData = resData.length > 25 ? resData.splice(0, 25) : resData;
+        localStorage.setItem("question_err", JSON.stringify(resData));
       }
     } catch (err) {
       console.log(err);

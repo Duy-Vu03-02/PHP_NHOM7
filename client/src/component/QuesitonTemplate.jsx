@@ -12,6 +12,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [quesitons, setQuestions] = useState([]);
   const [questionsErr, setQuestionsErr] = useState([]); // qs err cua exam hien tai
+  const [questionsCorrect, setQuestionsCorrect] = useState([]);
   const indexQuestion = useRef(1);
   const [autoNextQs, setAutoNextQs] = useState(true);
   const [score, setScore] = useState({
@@ -22,7 +23,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
     countMustTrue: 0,
     countTrueMustTrue: 0,
   });
-
   useEffect(() => {
     if (dataQuestion.length !== 0 && dataQuestion !== null) {
       setCurrentQuestion(dataQuestion[0]);
@@ -49,15 +49,19 @@ export default function QuesitonTemplate({ dataQuestion }) {
     }
   }, [quesitons]);
 
+  // update to db
   useEffect(() => {
     const fetch = async () => {
       if (score.show && questionsErr.length !== 0) {
-        // update ques err
-        const listId = questionsErr.map((item) => item.id);
+        // update ques err and correct
+        const listErr = questionsErr.map((item) => item.id);
+        const listCorrect = questionsCorrect.map((item) => item);
         const url =
-          "http://localhost/BaoCaoPHP/server/controllers/questionsError/createQuestionsError.php";
-        await axios.get(url + "?action=" + listId);
-
+          "http://localhost/BaoCaoPHP/server/controllers/questionsError/updateQuestions.php";
+        const res = await axios.get(
+          url + "?listerr=" + listErr + "&listcorrect=" + listCorrect
+        );
+        console.log(res);
         //  update ques err by user
         const dataLocal = await JSON.parse(localStorage.getItem("acc"));
         if (dataLocal !== null) {
@@ -67,7 +71,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
             const data = {
               email: dataLocal.email,
               userID: dataLocal.userID,
-              listID: listId,
+              listID: listErr,
               provider: dataLocal.provider,
             };
             const response = await axios.get(
@@ -81,7 +85,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
                 "&listID=" +
                 data.listID
             );
-            console.log(response);
           }
         }
       }
@@ -159,7 +162,12 @@ export default function QuesitonTemplate({ dataQuestion }) {
     var countMustTrue = 0;
     var countTrueMustTrue = 0;
     listData.forEach((element) => {
-      if (element.selected === element.trueAnswer) countTrue++;
+      if (element.selected === element.trueAnswer) {
+        countTrue++;
+        setQuestionsCorrect((prevState) => {
+          return [...prevState, element.id];
+        });
+      }
       // Neu sai luu vao state qsErr
       else {
         if (questionsErr.length === 0 && questionsErr === null) {
@@ -235,7 +243,10 @@ export default function QuesitonTemplate({ dataQuestion }) {
                 <div className="wrap-list-question">
                   <li key={currentQuestion.zindex}>
                     <div className="wrap-question">
-                      <div className="question-infor flex">
+                      <div
+                        className="question-infor flex"
+                        style={{ paddingBottom: "15px" }}
+                      >
                         <h5>
                           Câu {currentQuestion.zindex + 1}
                           .&nbsp;
@@ -288,6 +299,20 @@ export default function QuesitonTemplate({ dataQuestion }) {
                           ))}
                         </ul>
                       </div>
+                      {score.show && (
+                        <div
+                          className={`${
+                            currentQuestion.hint ? "hint-qs" : ""
+                          } line-hint-qs`}
+                        >
+                          <p>
+                            <b>Đáp án {currentQuestion.trueAnswer + 1}</b>
+                          </p>
+                          {currentQuestion.hint && (
+                            <p>Giải thích: {currentQuestion.hint}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </li>
                 </div>

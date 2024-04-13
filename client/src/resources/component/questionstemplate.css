@@ -21,7 +21,10 @@
 }
 .question-infor {
   border-bottom: 1px solid rgb(234, 232, 232);
-  padding: 10px 0 15px 0;
+  padding-top: 10px;
+}
+.question-infor > div {
+  padding-bottom: 10px;
 }
 .question-infor h5 {
   margin: 10px 0 0 0;
@@ -154,4 +157,17 @@
 .disable {
   cursor: default;
   pointer-events: none;
+}
+.green {
+  color: #52c41a !important;
+}
+.totaltimes {
+  color: #faad14;
+  line-height: 20px;
+  display: flex;
+  margin-right: 10px;
+}
+.totaltimes .dots {
+  height: 20px;
+  display: block;
 }
