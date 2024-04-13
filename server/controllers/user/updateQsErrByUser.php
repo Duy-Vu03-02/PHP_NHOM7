@@ -23,12 +23,13 @@
             $result = $conn->query($select);
             if($result->num_rows >0){
                 $data = $result->fetch_assoc();
-                $oldList = json_decode($data["questionerr"]);
+                /// true la nhan ve kieu mang
+                $oldList = json_decode($data["questionerr"], true);
                 $listID = explode(",",$listID);
                 $id = $data["id"];
 
                 // decode troc khi su dung
-                $mergeList = empty($oldList) || $oldList == null ? $listID : array_unique(array_merge($listID, $oldList));
+                $mergeList = empty($oldList) || $oldList == null ? $listID : ($listID + $oldList);
                 // encode truoc khi update
                 $mergeList = json_encode($mergeList);
 

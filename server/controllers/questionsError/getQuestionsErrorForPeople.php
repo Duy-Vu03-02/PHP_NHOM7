@@ -8,18 +8,27 @@
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $select = "SELECT  * FROM question 
-            inner join questionserror on question.id = questionserror.questionid
-            ORDER BY questionserror.totaltimes DESC
+            ORDER BY totalqserr ASC
             LIMIT 25";
         $result = $conn->query($select);
         $data = array();
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
-                $data[] = new Question($row);
+                $data[] = array(
+                    "id" => (int)$row["id"], 
+                    "question" => $row["text"], 
+                    "img" => $row["img"], 
+                    "answer" => explode(".,",$row["answers"]),
+                    "trueAnswer" => (int)$row["answer"], 
+                    "hint" => $row["hint"], 
+                    "mustCorrect" => boolval($row["critical"]),
+                    "totalqserr" => $row["totalqserr"],
+                    "totalqscorrect" => $row["totalqscorrect"],
+                );
             }
 
             http_response_code(200);
-            echo json_encode( $data);
+            echo json_encode($data);
         }
         else{
             http_response_code(204);
