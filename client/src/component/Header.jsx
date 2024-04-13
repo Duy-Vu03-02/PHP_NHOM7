@@ -46,7 +46,13 @@ export default function Header() {
       "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
     try {
       const response = await axios.post(url, data);
-      console.log(response.data);
+      if (response.data === null || response.data === undefined) {
+        let resData = JSON.parse(response.data.questionerr);
+        resData = resData.map((item) => ({ id: parseInt(item), count: 1 }));
+        localStorage.setItem("questionerr", JSON.stringify(resData));
+      } else {
+        localStorage.setItem("questionerr", "");
+      }
     } catch (err) {
       console.log(err);
     }

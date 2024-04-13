@@ -60,27 +60,29 @@ export default function QuesitonTemplate({ dataQuestion }) {
 
         //  update ques err by user
         const dataLocal = await JSON.parse(localStorage.getItem("acc"));
-        if (dataLocal.email !== null || dataLocal.userID !== null) {
-          const url =
-            "http://localhost/BaoCaoPHP/server/controllers/user/updateQsErrByUser.php";
-          const data = {
-            email: dataLocal.email,
-            userID: dataLocal.userID,
-            listID: listId,
-            provider: dataLocal.provider,
-          };
-          const response = await axios.get(
-            url +
-              "?provider=" +
-              data.provider +
-              "&email=" +
-              data.email +
-              "&userID=" +
-              data.userID +
-              "&listID=" +
-              data.listID
-          );
-          console.log(response);
+        if (dataLocal !== null) {
+          if (dataLocal.email !== null || dataLocal.userID !== null) {
+            const url =
+              "http://localhost/BaoCaoPHP/server/controllers/user/updateQsErrByUser.php";
+            const data = {
+              email: dataLocal.email,
+              userID: dataLocal.userID,
+              listID: listId,
+              provider: dataLocal.provider,
+            };
+            const response = await axios.get(
+              url +
+                "?provider=" +
+                data.provider +
+                "&email=" +
+                data.email +
+                "&userID=" +
+                data.userID +
+                "&listID=" +
+                data.listID
+            );
+            console.log(response);
+          }
         }
       }
     };

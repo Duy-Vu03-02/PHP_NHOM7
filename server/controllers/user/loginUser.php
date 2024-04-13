@@ -21,13 +21,12 @@
         else if($provider === "email" && $email !== null){
             $agile = "email = '$email'";
         }
-        $select = "SELECT * FROM user WHERE ".$agile;
+        $select = "SELECT questionerr FROM user WHERE ".$agile;
         if($email !== null || $userID !== null){
             $data = array();
             $result = $conn->query($select);
             if($result->num_rows >0){
-                $data[] = $result->fetch_assoc();
-                $listID = $data["questionerr"];
+                $listID = $result->fetch_assoc();
                 if($listID === null){
                     http_response_code(204);
                 }
