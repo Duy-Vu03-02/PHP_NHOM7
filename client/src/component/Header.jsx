@@ -248,7 +248,7 @@ export default function Header() {
                 <div className="btn-face flex">
                   <FacebookLogin
                     appId="701802418590275"
-                    autoLoad={true}
+                    autoLoad={false}
                     fields="name,email,picture"
                     icon={
                       <FaFacebook

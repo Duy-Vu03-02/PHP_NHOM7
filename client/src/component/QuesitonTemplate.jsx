@@ -51,7 +51,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
 
   useEffect(() => {
     const fetch = async () => {
-      if (score.show) {
+      if (score.show && questionsErr.length !== 0) {
         // update ques err
         const listId = questionsErr.map((item) => item.id);
         const url =

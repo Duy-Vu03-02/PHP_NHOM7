@@ -23,13 +23,17 @@
             $result = $conn->query($select);
             if($result->num_rows >0){
                 $data = $result->fetch_assoc();
-                $oldList = $data["questionerr"];
+                $oldList = json_decode($data["questionerr"]);
+                $listID = explode(",",$listID);
                 $id = $data["id"];
-                $mergeList = $oldList === null ? $listID : array_merge($listID, $oldList);
-                // Phai encode tro ve json moi update dc
+
+                // decode troc khi su dung
+                $mergeList = empty($oldList) || $oldList == null ? $listID : array_unique(array_merge($listID, $oldList));
+                // encode truoc khi update
                 $mergeList = json_encode($mergeList);
+
                 $update = "UPDATE user
-                        SET questionerr = $mergeList
+                        SET questionerr = '$mergeList'
                         WHERE id = '$id'";
                 if($conn->query($update)){
                     http_response_code(204);
