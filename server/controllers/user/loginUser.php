@@ -1,5 +1,6 @@
 <?php
     include "../../db/connect.php";
+    include "../../model/User.php";
 
     header("Access-Control-Allow-Origin: http://localhost:3000");
     header("Access-Control-Allow-Methods: GET, POST");
@@ -21,17 +22,17 @@
         else if($provider === "email" && $email !== null){
             $agile = "email = '$email'";
         }
-        $select = "SELECT questionerr FROM user WHERE ".$agile;
+        $select = "SELECT * FROM user WHERE ".$agile;
         if($email !== null || $userID !== null){
             $data = array();
             $result = $conn->query($select);
             if($result->num_rows >0){
-                $listID = $result->fetch_assoc();
-                if($listID === null){
+                $data = new User($result->fetch_assoc());
+                if($data === null){
                     http_response_code(204);
                 }
                 else{
-                    echo json_encode($listID);
+                    echo json_encode($data);
                     http_response_code(200);
                 }
             }

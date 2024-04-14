@@ -15,25 +15,14 @@ export default function Header() {
   const navigate = useNavigate();
   const [boxLogin, setBoxLogin] = useState(false);
   const [checkbox, setCheckBox] = useState(false);
-  const [dataUser, setDataUser] = useState(null);
   const [dataLocal, setDataLocal] = useState(null);
   const [showSetting, setShowSetting] = useState(false);
-
-  // useEffect(() => {
-  //   const fetch = () => {
-  //     const data = {
-  //       name: "Ngo duy vu",
-  //       email: "vungovu00@gmail.com",
-  //       picture: "http://localhost/description4.png",
-  //     };
-  //     localStorage.setItem("acc", JSON.stringify(data));
-  //     data.provider = "facebook";
-  //     console.log(data);
-  //     storeDB(data);
-  //   };
-
-  //   fetch();
-  // }, []);
+  const [dataUpdate, setDataUpdate] = useState({
+    name: "",
+    email: "",
+    avatar: "",
+    userID: "",
+  });
 
   const storeLocal = (data) => {
     if (data !== null) {
@@ -46,11 +35,23 @@ export default function Header() {
       "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
     try {
       const response = await axios.post(url, data);
-      if (response.data !== null || response.data !== undefined) {
-        let resData = JSON.parse(response.data.questionerr);
-        resData = resData.map((item) => ({ id: parseInt(item), count: 1 }));
-        resData = resData.length > 25 ? resData.splice(0, 25) : resData;
-        localStorage.setItem("question_err", JSON.stringify(resData));
+      const resData = response.data;
+      if (resData !== null || resData !== undefined) {
+        // set questionerr in local
+        if (resData.questionerr !== null) {
+          let listID = JSON.parse(resData.questionerr);
+          listID = listID.map((item) => ({ id: parseInt(item), count: 1 }));
+          listID = listID.length > 25 ? listID.splice(0, 25) : listID;
+          localStorage.setItem("question_err", JSON.stringify(listID));
+        }
+        // set user infor local
+        storeLocal({
+          provider: data.provider,
+          email: resData.email,
+          name: resData.name,
+          picture: resData.picture,
+          userID: resData.userID,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -91,6 +92,49 @@ export default function Header() {
   const handleShowSetting = (value) => {
     setShowSetting(value);
   };
+  const handleChangeUpdate = (e) => {
+    setDataUpdate((prevState) => {
+      return {
+        ...prevState,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
+  const handleUpdateUser = async () => {
+    const data = {
+      provider: dataLocal.provider,
+      oldEmail: dataLocal.email,
+      oldUserID: dataLocal.userID,
+      username: dataUpdate.name === "" ? dataLocal.name : dataUpdate.name,
+      picture: dataUpdate.avatar === "" ? dataLocal.picture : dataUpdate.avatar,
+      userID: dataUpdate.userID === "" ? dataLocal.userID : dataUpdate.userID,
+    };
+    if (dataUpdate.email === null || dataUpdate.email === "") {
+      if (dataLocal.provider === "facebook") {
+        data.email = null;
+      } else {
+        data.email = dataLocal.email;
+      }
+    } else {
+      data.email = dataUpdate.email;
+    }
+    const url =
+      "http://localhost/BaoCaoPHP/server/controllers/user/updateInfoUser.php";
+    const response = await axios.post(url, data);
+    if (response.status === 200) {
+      const lastProvider = await JSON.parse(localStorage.getItem("acc"))
+        .provider;
+
+      storeLocal({
+        provider: lastProvider,
+        email: data.email,
+        name: data.username,
+        userID: data.userID,
+        picture: data.picture,
+      });
+    }
+    setShowSetting(false);
+  };
 
   const handle = () => {};
   return (
@@ -124,6 +168,7 @@ export default function Header() {
                     <input
                       type="text"
                       name="name"
+                      onChange={handleChangeUpdate}
                       placeholder={dataLocal.name}
                     />
                   </div>
@@ -132,6 +177,7 @@ export default function Header() {
                     <input
                       type="text"
                       name="email"
+                      onChange={handleChangeUpdate}
                       placeholder={
                         dataLocal.email ? dataLocal.email : "Nhập email"
                       }
@@ -142,23 +188,8 @@ export default function Header() {
                     <input
                       type="text"
                       name="avatar"
+                      onChange={handleChangeUpdate}
                       placeholder="Nhập url avatar"
-                    />
-                  </div>
-                  <div className="change-acount flex">
-                    <p>Account: </p>
-                    <input
-                      type="text"
-                      name="account"
-                      placeholder="Nhập tài khoản"
-                    />
-                  </div>
-                  <div className="change-password flex">
-                    <p>Password: </p>
-                    <input
-                      type="text"
-                      name="password"
-                      placeholder="Nhập mật khẩu"
                     />
                   </div>
                 </div>
@@ -166,9 +197,7 @@ export default function Header() {
             </div>
             <div className="footer-setting">
               <div className="btn-close">
-                <button onClick={() => handleShowSetting(false)}>
-                  Cập nhật
-                </button>
+                <button onClick={handleUpdateUser}>Cập nhật</button>
               </div>
             </div>
           </div>
@@ -185,7 +214,7 @@ export default function Header() {
           </div>
           <div className="right-header flex">
             <button>Hạng GPLX: A1</button>
-            {dataUser === null && dataLocal === null ? (
+            {dataLocal === null ? (
               <button onClick={() => handleBoxLogin(true)}>Đăng nhập</button>
             ) : (
               <div className="user-info flex">
@@ -232,20 +261,12 @@ export default function Header() {
                           picture: decode.picture ? decode.picture : null,
                           userID: null,
                         };
-                        setDataUser(data);
                         storeDB(data);
-                        storeLocal({
-                          provider: data.provider,
-                          email: data.email,
-                          name: data.name,
-                          picture: decode.picture,
-                          userID: null,
-                        });
                         setBoxLogin(false);
                       }
                     }}
                     onError={() => {
-                      setDataUser(null);
+                      setDataLocal(null);
                       setBoxLogin(true);
                     }}
                   />
@@ -279,18 +300,10 @@ export default function Header() {
                             : null,
                           userID: response.userID,
                         };
-                        setDataUser(data);
                         storeDB(data);
-                        storeLocal({
-                          provider: data.provider,
-                          email: null,
-                          name: data.name,
-                          picture: data.picture,
-                          userID: data.userID,
-                        });
                         setBoxLogin(false);
                       } else {
-                        setDataUser(null);
+                        setDataLocal(null);
                         setCheckBox(true);
                       }
                     }}

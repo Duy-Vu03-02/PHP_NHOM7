@@ -295,7 +295,7 @@ main {
   align-content: center;
 }
 .change-detail div {
-  margin-top: 30px;
+  margin: 30px;
 }
 .change-detail p {
   width: 100px;

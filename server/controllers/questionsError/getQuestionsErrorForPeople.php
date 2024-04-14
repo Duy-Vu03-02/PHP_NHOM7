@@ -8,8 +8,8 @@
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $select = "SELECT  * FROM question 
-            ORDER BY totalqserr ASC
-            LIMIT 25";
+            ORDER BY totalqserr DESC
+            LIMIT 50";
         $result = $conn->query($select);
         $data = array();
         if($result->num_rows > 0){
