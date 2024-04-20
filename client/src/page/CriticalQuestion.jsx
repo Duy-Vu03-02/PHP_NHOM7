@@ -27,10 +27,6 @@ export default function CriticalQuestion(props) {
     fetch();
   }, []);
 
-  const handleReqQsErr = (data) => {
-    console.log(data);
-  };
-
   return (
     <>
       <div className="content-critical">

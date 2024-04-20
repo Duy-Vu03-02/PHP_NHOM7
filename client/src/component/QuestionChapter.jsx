@@ -5,6 +5,7 @@ import { GoDash } from "react-icons/go";
 import { FaRegStar } from "react-icons/fa6";
 import { FiSkipForward } from "react-icons/fi";
 import { FiSkipBack } from "react-icons/fi";
+import ReactPaginate from "react-paginate";
 
 export default function QuesitonTemplate({ dataQuestion }) {
   const [listData, setListData] = useState([]);
@@ -19,7 +20,12 @@ export default function QuesitonTemplate({ dataQuestion }) {
     state: false,
     show: false,
   });
+  const [qsOfPage, setQsOfPage] = useState({
+    start: 0,
+    end: 27,
+  });
   const indexQuestion = useRef(0);
+  const currentPage = useRef(0);
 
   useEffect(() => {
     setCurrentQuestion(dataQuestion[0]);
@@ -44,6 +50,13 @@ export default function QuesitonTemplate({ dataQuestion }) {
     }
   }, [quesitons]);
 
+  const handlePageClick = (e) => {
+    currentPage.current = e.selected;
+    setQsOfPage({
+      start: e.selected * 27,
+      end: (e.selected + 1) * 27,
+    });
+  };
   const handleShowQuestion = (data, index) => {
     setCurrentQuestion(data);
     indexQuestion.current = index;
@@ -101,7 +114,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   };
 
   const handleChangeShowQs = (value) => {
-    if (value === true && indexQuestion.current < listData.length -1) {
+    if (value === true && indexQuestion.current < listData.length - 1) {
       indexQuestion.current += 1;
       setCurrentQuestion(listData[indexQuestion.current]);
     } else if (value === false && indexQuestion.current > 0) {
@@ -135,7 +148,10 @@ export default function QuesitonTemplate({ dataQuestion }) {
                   <div className="wrap-list-question">
                     <li key={currentQuestion.zindex}>
                       <div className="wrap-question">
-                        <div className="question-infor flex">
+                        <div
+                          className="question-infor flex"
+                          style={{ paddingBottom: "15px" }}
+                        >
                           <h5>
                             Câu {currentQuestion.zindex + 1}
                             .&nbsp;
@@ -245,7 +261,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
                   ""
                 )}
               </div>
-              <div className="right-temp">
+              <div className="right-temp" style={{ height: "450px" }}>
                 <div
                   className="wrap-btn-complete"
                   style={{ borderTop: "none" }}
@@ -272,21 +288,22 @@ export default function QuesitonTemplate({ dataQuestion }) {
                 <div className="show-list">
                   <ul className="wrap-list-qs flex">
                     {currentQuestion && listData
-                      ? listData.map((data, index) => (
-                          <li
-                            key={index}
-                            className={`item-select ${
-                              index === currentQuestion.zindex
-                                ? "item-select-active"
-                                : ""
-                            }
+                      ? listData.map((data, index) =>
+                          index >= qsOfPage.start && index <= qsOfPage.end ? (
+                            <li
+                              key={index}
+                              className={`item-select ${
+                                index === currentQuestion.zindex
+                                  ? "item-select-active"
+                                  : ""
+                              }
                           ${data.selected !== null ? "item-select-ok" : ""}
                           
                           flex`}
-                            onClick={() => handleShowQuestion(data, index)}
-                          >
-                            <div
-                              className={`btn-select
+                              onClick={() => handleShowQuestion(data, index)}
+                            >
+                              <div
+                                className={`btn-select
                             ${
                               score.show
                                 ? data.selected === data.trueAnswer
@@ -295,24 +312,44 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                 : ""
                             }
                           flex`}
-                            >
-                              {listData[index].selected === null ? (
-                                <GoDash className="icon-dash" />
-                              ) : listData[index].mustCorrect && score.show ? (
-                                <FaRegStar className="icon-dash" />
-                              ) : (
-                                <IoMdCheckmark className="icon-dash" />
-                              )}
-                              <p>{index + 1}</p>
-                            </div>
-                          </li>
-                        ))
+                              >
+                                {listData[index].selected === null ? (
+                                  <GoDash className="icon-dash" />
+                                ) : listData[index].mustCorrect &&
+                                  score.show ? (
+                                  <FaRegStar className="icon-dash" />
+                                ) : (
+                                  <IoMdCheckmark className="icon-dash" />
+                                )}
+                                <p>{index + 1}</p>
+                              </div>
+                            </li>
+                          ) : (
+                            ""
+                          )
+                        )
                       : ""}
                   </ul>
                 </div>
+                <div className="next-question">
+                  {Math.floor(dataQuestion.length / 25) == 0 ? (
+                    ""
+                  ) : (
+                    <ReactPaginate
+                      className="react-page"
+                      breakLabel="..."
+                      nextLabel=">"
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={3}
+                      marginPagesDisplayed={3}
+                      pageCount={Math.floor(dataQuestion.length / 25)}
+                      previousLabel="<"
+                      renderOnZeroPageCount={null}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-            <div className="next-question"></div>
           </div>
         </div>
       )}

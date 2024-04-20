@@ -7,9 +7,9 @@
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $listErr = isset($_GET["listerr"]) ? $_GET["listerr"] : "";
-        $listCorrect = isset($_GET["listcorrect"]) ? $_GET["listcorrect"] : "";
-        if($listErr != "" || $listCorrect != ""){
+        $listErr = isset($_GET["listerr"]) ? $_GET["listerr"] : null;
+        $listCorrect = isset($_GET["listcorrect"]) ? $_GET["listcorrect"] : null;
+        if($listErr != null || $listCorrect != null){
             $listErr = explode(",",$listErr);
             $listCorrect = explode(",", $listCorrect);
             for($i = 0; $i< count($listErr); $i++){

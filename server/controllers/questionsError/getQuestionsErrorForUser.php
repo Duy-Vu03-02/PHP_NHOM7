@@ -6,7 +6,6 @@
     header("Access-Control-Allow-Methods: GET, POST");
     header("Content-Type: application/json");
 
-
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $action = isset($_GET["action"]) ? $_GET["action"] : "";
         $listID = explode(",", $action);
