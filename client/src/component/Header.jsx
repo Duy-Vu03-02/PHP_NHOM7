@@ -31,14 +31,16 @@ export default function Header() {
     setDataLocal(data);
   };
   const storeDB = async (data) => {
+    console.log("checj");
     const url =
       "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
     try {
       const response = await axios.post(url, data);
       const resData = response.data;
+      console.log(response);
       if (resData !== null || resData !== undefined) {
         // set questionerr in local
-        if (resData.questionerr !== null) {
+        if (resData.questionerr) {
           let listID = JSON.parse(resData.questionerr);
           listID = listID.map((item) => ({ id: parseInt(item), count: 1 }));
           listID = listID.length > 25 ? listID.splice(0, 25) : listID;

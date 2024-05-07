@@ -41,8 +41,18 @@
                         VALUES('$username', '$pictute', '$email', '$userID')";
                 $resInsert = $conn->multi_query($insert);
                 if($resInsert){
-                    http_response_code(204);
-                    echo json_encode(array("mess" => "INSERT success"));
+                    $data = array();
+                    $result = $conn->query($select);
+                    if($result->num_rows >0){
+                        $data = new User($result->fetch_assoc());
+                        if($data === null){
+                            http_response_code(204);
+                        }
+                        else{
+                            echo json_encode($data);
+                            http_response_code(200);
+                        }
+                    }
                 }
             }
         }
