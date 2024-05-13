@@ -23,6 +23,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
     countMustTrue: 0,
     countTrueMustTrue: 0,
   });
+
   useEffect(() => {
     if (dataQuestion.length !== 0 && dataQuestion !== null) {
       setCurrentQuestion(dataQuestion[0]);
@@ -157,7 +158,8 @@ export default function QuesitonTemplate({ dataQuestion }) {
   };
 
   const handleCalculatorScore = () => {
-    handleTimeOut();
+    if(score.state){
+      handleTimeOut();
     var countTrue = 0;
     var countMustTrue = 0;
     var countTrueMustTrue = 0;
@@ -214,6 +216,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
             : false,
       };
     });
+    }
   };
 
   const handleAutoNextQuestion = () => {
