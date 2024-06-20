@@ -20,16 +20,10 @@
     function getExam($examId){
         global $conn;
         
-            $select = "
-                SELECT 
-                tbl_question.id, tbl_question.title, tbl_question.questionImage,
-                tbl_question.option_1, tbl_question.option_2, tbl_question.option_3,
-                tbl_question.option_4, tbl_question.chapterId, tbl_question.trueAnswer,
-                tbl_question.isDanger 
-                FROM tbl_question 
-                INNER JOIN tbl_exam_question 
-                ON tbl_question.id = tbl_exam_question.questionId
-                WHERE tbl_exam_question.examId = '$examId'";
+            $select = "SELECT question.id, question.text, question.img, question.answers, 
+                question.answer, question.critical, question.hint FROM question 
+                INNER JOIN exam ON question_exam = exam.id
+                WHERE exam.id = '$examId'";
             $result = $conn->query($select);
             $temp = array();
             if($result->num_rows > 0){

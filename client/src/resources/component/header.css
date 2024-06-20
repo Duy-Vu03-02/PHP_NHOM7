@@ -5,7 +5,7 @@
 }
 .header {
   background-color: #001529;
-  height: 65px;
+  height: 60px;
   width: 100vw;
   justify-content: space-between;
 }
@@ -110,7 +110,7 @@ footer {
   display: none;
   position: absolute;
   left: 125px;
-  top: 53px;
+  top: 50px;
   width: 180px;
   background-color: white;
   border-radius: 10px;

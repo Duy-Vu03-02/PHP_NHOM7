@@ -4,7 +4,7 @@
 .wrap-question {
   padding: 10px 20px;
   max-width: 1220px;
-  margin: 20px auto;
+  margin: 20px auto 0 auto;
   display: block;
   background-color: white;
 }
@@ -71,7 +71,7 @@
   transition: color 0.3s, border 0.3s;
 }
 .btn-submit-complete button {
-  margin: -10px 0 40px 150px;
+  margin: 15px 110px;
 }
 .btn-submit-complete {
   /* background-color: rebeccapurple; */

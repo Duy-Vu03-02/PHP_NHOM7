@@ -21,7 +21,7 @@
         else if($provider === "email" && $email !== null){
             $agile = "email = '$email'";
         }
-        $select = "SELECT * FROM tbl_user WHERE ".$agile;
+        $select = "SELECT * FROM user WHERE ".$agile;
         // echo json_encode($provider);
 
         if($email !== null || $userID !== null){
@@ -38,8 +38,8 @@
                 }
             }
             else{
-                $insert = "INSERT INTO tbl_user(username, picture, email, facebook, userID)
-                        VALUES('$username', '$pictute', '$email', '$userID', '$userID')";
+                $insert = "INSERT INTO user(username, picture, email, , userID)
+                        VALUES('$username', '$pictute', '$email', '$userID')";
                 $resInsert = $conn->query($insert);
                 if($resInsert){
                     $data = array();

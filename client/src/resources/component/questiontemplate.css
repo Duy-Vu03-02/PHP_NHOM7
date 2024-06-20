@@ -6,7 +6,7 @@
 }
 .right-temp {
   background-color: white;
-  /* height: 465px; */
+  height: 100%;
   width: 450px;
   margin: 20px;
   position: relative;
@@ -82,6 +82,7 @@
 .wrap-list-qs {
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 10px;
 }
 .wrap-list-qs .item-select {
   width: 80px;

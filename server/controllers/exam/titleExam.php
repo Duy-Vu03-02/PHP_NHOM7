@@ -7,7 +7,7 @@
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $selectTotalExam = "SELECT id, tbl_exam.name  FROM tbl_exam";
+        $selectTotalExam = "SELECT id  FROM exam";
         $result = $conn->query($selectTotalExam);
         $data = array();
         if($result->num_rows > 0){

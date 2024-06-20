@@ -8,7 +8,7 @@
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $data = array() ;
-        $select = "SELECT * FROM tbl_titlenoticeboard";
+        $select = "SELECT * FROM titlenoticeboard";
         $result = $conn->query($select);
 
         if($result->num_rows > 0){

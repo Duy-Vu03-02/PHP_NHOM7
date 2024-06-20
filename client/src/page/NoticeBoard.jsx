@@ -14,7 +14,7 @@ export default function NoticeBoard(props) {
   useEffect(() => {
     const fetch = async () => {
       const data = await axios.get(
-        "http://localhost/BaoCaoPHP/Server/API/controllers/noticeBoard/titleNoticeBoard.php"
+        "http://localhost/BaoCaoPHP/Server/controllers/noticeBoard/titleNoticeBoard.php"
       );
       if (data.status === 200) {
         setListData(data.data);
@@ -100,7 +100,7 @@ function ShowType({ indexData }) {
   useEffect(() => {
     const fetch = async () => {
       const data = await axios.get(
-        `http://localhost/BaoCaoPHP/Server/API/controllers/noticeBoard/contentNoticeBoard.php?index=${indexData}`
+        `http://localhost/BaoCaoPHP/Server/controllers/noticeBoard/contentNoticeBoard.php?index=${indexData}`
       );
       if (data.status === 200) {
         setListdata(data.data);

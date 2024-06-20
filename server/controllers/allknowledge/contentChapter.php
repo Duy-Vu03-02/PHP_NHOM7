@@ -9,7 +9,7 @@
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $id = isset($_GET["id"]) ? (String)$_GET["id"] : "";
         if($id !== ""){
-            $select = "SELECT * FROM tbl_question where chapterId = '$id'";
+            $select = "SELECT * FROM question where question_chapter = '$id'";
             $result = $conn->query($select);
             $data = array();
 

@@ -7,7 +7,7 @@
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"]  === "GET"){
-        $select = "SELECT * FROM tbl_chapter";
+        $select = "SELECT * FROM chapter";
         $result = $conn->query($select);
         $data = array();
 

@@ -7,7 +7,7 @@
 
 
    if($_SERVER["REQUEST_METHOD"] === "GET" ){
-    $selectTotalQuestion = "SELECT COUNT(*)  FROM tbl_question";
+    $selectTotalQuestion = "SELECT COUNT(*)  FROM question";
     $result = $conn->query($selectTotalQuestion);
     
     if($result->num_rows >0){
@@ -32,7 +32,7 @@
         while(count($arrayID) < $questionNomal){
             $rand = random_int(1,$total);
             if(!in_array($rand, $arrayID)){
-                $select = "SELECT * FROM tbl_question where id = $rand and isDanger = 0";
+                $select = "SELECT * FROM question where id = $rand and critical = 0";
                 $result = $conn->query($select);
                 
                 if($result->num_rows >0){
@@ -47,7 +47,7 @@
         while(count($arrayID) < $questionCritical){
             $rand = random_int(1,$total);
             if(!in_array($rand, $arrayID)){
-                $select = "SELECT * FROM tbl_question where id = $rand and isDanger = 1";
+                $select = "SELECT * FROM question where id = $rand and critical = 1";
                 $result = $conn->query($select);
                 
                 if($result->num_rows >0){

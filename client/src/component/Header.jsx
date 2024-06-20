@@ -25,6 +25,7 @@ export default function Header() {
     avatar: "",
     userID: "",
   });
+  const [stateUp, setStateUp] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -41,11 +42,17 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    if (dataUpdate.name) {
+      setStateUp(true);
+    }
+  }, [userData]);
+
+  useEffect(() => {
     const fetch = async () => {
       const data = await JSON.parse(localStorage.getItem("acc"));
       if (data != null) {
         const url =
-          "http://localhost/BaoCaoPHP/Server/API/controllers/user/loginUser.php";
+          "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
         const response = await axios.post(url, data);
         if (response.status === 200) {
           const resData = response.data;
@@ -87,7 +94,7 @@ export default function Header() {
   const fetchDb = async (data) => {
     if (data != null) {
       const url =
-        "http://localhost/BaoCaoPHP/Server/API/controllers/user/loginUser.php";
+        "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
       const response = await axios.post(url, data);
       if (response.status === 200) {
         const resData = response.data;
@@ -164,7 +171,7 @@ export default function Header() {
       data.email = dataUpdate.email;
     }
     const url =
-      "http://localhost/BaoCaoPHP/Server/API/controllers/user/updateInfoUser.php";
+      "http://localhost/BaoCaoPHP/Server/controllers/user/updateInfoUser.php";
     const response = await axios.post(url, data);
     if (response.status === 200) {
       setUserData(data);
@@ -194,8 +201,11 @@ export default function Header() {
             </div>
             <div className="content-setting flex">
               <div className="info-user">
-                <img src={dataLocal.picture} alt="" />
-                <p>{dataLocal.name}</p>
+                <img
+                  src={stateUp ? dataUpdate.avatar : dataLocal.picture}
+                  alt=""
+                />
+                <p>{stateUp ? dataUpdate.name : dataLocal.name}</p>
               </div>
               <div className="change-info">
                 <h4>Cập nhật thông tin cá nhân</h4>
@@ -245,9 +255,7 @@ export default function Header() {
         <div className="header flex">
           <div className="left-header flex">
             <img src={logo} alt="logo" />
-            <Link to="http://localhost/BaoCaoPHP/Server/admin/adminCommon/Login.php">
-              Admin
-            </Link>
+            <Link>Admin</Link>
             <Link to="/">Tin Tức</Link>
             <Link to="/">Xốp hơi</Link>
             <Link to="/">PE foam</Link>
@@ -258,8 +266,19 @@ export default function Header() {
               <button onClick={() => handleBoxLogin(true)}>Đăng nhập</button>
             ) : (
               <div className="user-info flex">
-                <img src={dataLocal.picture} alt="img-avatar" />
-                <p>{dataLocal.name}</p>
+                <img
+                  src={
+                    stateUp && dataUpdate.avatar
+                      ? dataUpdate.avatar
+                      : dataLocal.picture
+                  }
+                  alt="img-avatar"
+                />
+                <p>
+                  {stateUp && dataUpdate.name
+                    ? dataUpdate.name
+                    : dataLocal.name}
+                </p>
                 <div className="box-logout">
                   <div className="flex" onClick={() => handleShowSetting(true)}>
                     <FiSettings className="icon-setting" />

@@ -7,7 +7,7 @@
     header("Content-type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $select = "SELECT * FROM tbl_question where isDanger = 1";
+        $select = "SELECT * FROM question where critical = 1";
         $result = $conn->query($select);
         $data = array();
 

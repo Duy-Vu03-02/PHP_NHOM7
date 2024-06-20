@@ -10,7 +10,7 @@
         $index = isset($_GET['index']) ? $_GET['index'] : "";
         if($index !== ""){
             $data = array();
-            $select = "SELECT * FROM tbl_detailnoticeboard where detail_titlenoticeboard = $index";
+            $select = "SELECT * FROM detailnoticeboard where detail_titlenoticeboard = $index";
             $result = $conn->query($select);
             
             if($result->num_rows > 0){

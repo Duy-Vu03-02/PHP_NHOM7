@@ -60,7 +60,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
         const listErr = questionsErr.map((item) => item.id);
         const listCorrect = questionsCorrect.map((item) => item);
         const url =
-          "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/updateQuestions.php";
+          "http://localhost/BaoCaoPHP/Server/controllers/questionError/updateQuestions.php";
         const res = await axios.get(
           url + "?listerr=" + listErr + "&listcorrect=" + listCorrect
         );
@@ -70,7 +70,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
         if (dataLocal !== null) {
           if (dataLocal.email !== null || dataLocal.userID !== null) {
             const url =
-              "http://localhost/BaoCaoPHP/Server/API/controllers/user/updateQsErrByUser.php";
+              "http://localhost/BaoCaoPHP/Server/controllers/user/updateQsErrByUser.php";
             const data = {
               email: dataLocal.email,
               userID: dataLocal.userID,
@@ -237,8 +237,8 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const handleChangeAutoNext = () => {
     autoNextQs ? setAutoNextQs(false) : setAutoNextQs(true);
   };
-
   const handle = () => {};
+
   return (
     <>
       <div className="question-template">
@@ -299,8 +299,11 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                 )}
                                 onChange={handle}
                               />
+
                               <span>&nbsp; </span>
-                              <p>{rep}</p>
+                              <p>
+                                {z + 1}. {rep.includes(".") ? rep : rep + "."}
+                              </p>
                             </li>
                           ))}
                         </ul>

@@ -20,7 +20,7 @@ export default function QuesitionsError(props) {
         let listId = data.map((item) => item.id);
         listId = listId.length > 25 ? listId.splice(0, 25) : listId;
         const urlUser =
-          "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/getQuestionsErrorForUser.php";
+          "http://localhost/BaoCaoPHP/Server/controllers/questionsError/getQuestionsErrorForUser.php";
 
         const responseUser = await axios.get(urlUser + "?action=" + listId);
         if (responseUser.status === 200) {
@@ -29,8 +29,9 @@ export default function QuesitionsError(props) {
       }
 
       const urlPeople =
-        "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/getQuestionsErrorForPeople.php";
+        "http://localhost/BaoCaoPHP/Server/controllers/questionsError/getQuestionsErrorForPeople.php";
       const responsePeople = await axios.get(urlPeople);
+      console.log(responsePeople);
       if (responsePeople.status === 200) {
         setListDataPeople(responsePeople.data);
       } else if (responsePeople.status === 204) {

@@ -7,10 +7,15 @@ export default function Footer() {
     <>
       <div className="flex">
         <FaRegCopyright className="copyright" />
-        <p className="footer">2024 onthigplx.vn</p>
+        <p className="footer">
+          2024{" "}
+          <Link target="_blank" to="https://zolazi.000webhostapp.com/">
+            zolazi.000webhostapp.com
+          </Link>
+        </p>
         <FaRegFaceSmile className="copyright" />
         <p className="footer">
-          Website được tạo bởi <Link>Nhóm 24</Link>
+          Website được tạo bởi <Link>Nhóm 7</Link>
         </p>
       </div>
     </>

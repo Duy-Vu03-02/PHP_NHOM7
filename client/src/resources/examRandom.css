@@ -1,12 +1,12 @@
 .box-exam {
   width: calc(100vw - 200px);
   /* height: 400px; */
-  margin: 20px auto;
+  margin: 10px auto;
   margin-bottom: 20px;
 }
 .title-exam {
   text-transform: uppercase;
-  margin: 10px 30px;
+  margin: 0px 30px;
   align-items: center;
 }
 .title-exam h3 {
