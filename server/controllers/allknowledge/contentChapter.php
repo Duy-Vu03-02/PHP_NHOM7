@@ -1,15 +1,15 @@
 <?php
     include "../../db/connect.php";
     include "../../model/Question.php";
-    
+
     header("Access-Control-Allow-Origin: http://localhost:3000");
     header("Access-Control-Allow-Methods: GET, POST");
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $id = isset($_GET["id"]) ? $_GET["id"] : "";
+        $id = isset($_GET["id"]) ? (String)$_GET["id"] : "";
         if($id !== ""){
-            $select = "SELECT * FROM question where question_chapter = $id";
+            $select = "SELECT * FROM tbl_question where chapterId = '$id'";
             $result = $conn->query($select);
             $data = array();
 
@@ -18,7 +18,6 @@
                     $data[] = new Question($row);
                 }
                 
-                // echo json_encode(array("count" => $result->num_rows));
                 echo json_encode($data);
             }
             else{

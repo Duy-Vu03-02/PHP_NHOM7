@@ -11,6 +11,7 @@ export default function QuesitionsError(props) {
   const [resTemplate, setResTemplate] = useState([false, false]);
   const [listDataUser, setListDataUser] = useState([]);
   const [listDataPeople, setListDataPeople] = useState([]);
+  const [checkedqs, setCheckedqs] = useState([[], []]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -19,7 +20,8 @@ export default function QuesitionsError(props) {
         let listId = data.map((item) => item.id);
         listId = listId.length > 25 ? listId.splice(0, 25) : listId;
         const urlUser =
-          "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForUser.php";
+          "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/getQuestionsErrorForUser.php";
+
         const responseUser = await axios.get(urlUser + "?action=" + listId);
         if (responseUser.status === 200) {
           setListDataUser(responseUser.data);
@@ -27,7 +29,7 @@ export default function QuesitionsError(props) {
       }
 
       const urlPeople =
-        "http://localhost/BaoCaoPHP/server/controllers/questionsError/getQuestionsErrorForPeople.php";
+        "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/getQuestionsErrorForPeople.php";
       const responsePeople = await axios.get(urlPeople);
       if (responsePeople.status === 200) {
         setListDataPeople(responsePeople.data);
@@ -41,6 +43,7 @@ export default function QuesitionsError(props) {
   const YourQuestionsError = (
     <QuestionsTemplate
       dataQuestion={listDataUser}
+      // checkedQs={() => handleCheckedQs(1)}
       result={resTemplate[0]}
       handleReq={() => handleRes(0)}
     />
@@ -48,6 +51,7 @@ export default function QuesitionsError(props) {
   const PeopleQuestionsError = (
     <QuestionsTemplate
       dataQuestion={listDataPeople}
+      // checkedQs={() => handleCheckedQs(1)}
       result={resTemplate[1]}
       handleReq={() => handleRes(1)}
     />

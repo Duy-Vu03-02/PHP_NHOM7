@@ -93,6 +93,7 @@ footer {
   align-items: center;
   cursor: pointer;
   padding: 3px;
+  height: 35px;
   margin: 0 10px;
   border-radius: 20px;
   transition: background-color 0.5s;
@@ -109,7 +110,7 @@ footer {
   display: none;
   position: absolute;
   left: 125px;
-  top: 51px;
+  top: 53px;
   width: 180px;
   background-color: white;
   border-radius: 10px;

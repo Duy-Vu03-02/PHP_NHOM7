@@ -57,6 +57,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
       end: (e.selected + 1) * 27,
     });
   };
+
   const handleShowQuestion = (data, index) => {
     setCurrentQuestion(data);
     indexQuestion.current = index;
@@ -89,7 +90,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
 
     //heightLight
     setAutoShowAns((prevState) => {
-      if (prevState.state) {
+      if (prevState?.state) {
         return {
           state: true,
           hightLine: true,
@@ -135,7 +136,6 @@ export default function QuesitonTemplate({ dataQuestion }) {
 
     handleSelected(zindex, z);
   };
-
   const handle = () => {};
   return (
     <>
@@ -174,6 +174,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
                               ${
                                 listData[indexQuestion.current].trueAnswer ===
                                   z &&
+                                autoShowAns?.state &&
                                 listData[indexQuestion.current].selected !==
                                   null
                                   ? "check-correct"
@@ -182,6 +183,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
                               ${
                                 listData[indexQuestion.current].trueAnswer !==
                                   z &&
+                                autoShowAns?.state &&
                                 listData[indexQuestion.current].selected !==
                                   null &&
                                 listData[indexQuestion.current].selected === z
@@ -189,7 +191,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                   : ""
                               }
                               ${
-                                autoShowAns.hightLine &&
+                                autoShowAns?.hightLine &&
                                 listData[indexQuestion.current].selected !==
                                   null
                                   ? "disable"
@@ -216,7 +218,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                   )}
                                   onChange={handle}
                                 />
-                                <span>{z + 1}.&nbsp; </span>
+                                {/* <span>{z + 1}.&nbsp; </span> */}
                                 <p>{rep}</p>
                               </li>
                             ))}
@@ -269,17 +271,17 @@ export default function QuesitonTemplate({ dataQuestion }) {
                   <div className={`btn-complete flex`}>
                     <div className="auto-next-qs" onClick={handleAutoShowAns}>
                       <input
-                        className={autoShowAns.state ? "" : "un-auto-next-qs"}
+                        className={!autoShowAns?.state ? "un-auto-next-qs" : ""}
                         type="button"
                         value={
-                          autoShowAns.state
-                            ? "Tự hiển thị đáp án"
+                          !autoShowAns?.state
+                            ? "Không hiển thị đáp án"
                             : "Không hiển thị đáp án"
                         }
                       />
                       <div
                         className={`btn-auto-next-qs ${
-                          autoShowAns.state ? "" : "un-auto-next-qs"
+                          !autoShowAns?.state ? "un-auto-next-qs" : ""
                         }`}
                       ></div>
                     </div>
@@ -296,22 +298,19 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                 index === currentQuestion.zindex
                                   ? "item-select-active"
                                   : ""
-                              }
-                          ${data.selected !== null ? "item-select-ok" : ""}
-                          
-                          flex`}
+                              } ${
+                                data.selected !== null ? "item-select-ok" : ""
+                              } flex`}
                               onClick={() => handleShowQuestion(data, index)}
                             >
                               <div
-                                className={`btn-select
-                            ${
-                              score.show
-                                ? data.selected === data.trueAnswer
-                                  ? "result-question-true"
-                                  : "result-question-false"
-                                : ""
-                            }
-                          flex`}
+                                className={`btn-select ${
+                                  score.show
+                                    ? data.selected === data.trueAnswer
+                                      ? "result-question-true"
+                                      : "result-question-false"
+                                    : ""
+                                } flex`}
                               >
                                 {listData[index].selected === null ? (
                                   <GoDash className="icon-dash" />
@@ -324,11 +323,9 @@ export default function QuesitonTemplate({ dataQuestion }) {
                                 <p>{index + 1}</p>
                               </div>
                             </li>
-                          ) : (
-                            ""
-                          )
+                          ) : null
                         )
-                      : ""}
+                      : null}
                   </ul>
                 </div>
                 <div className="next-question">

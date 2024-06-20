@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import axios from "axios";
 import "../resources/component/questiontemplate.css";
 import { IoMdCheckmark } from "react-icons/io";
 import { LuClock } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
 import { FaRegStar } from "react-icons/fa6";
-import axios from "axios";
+import { UserContext } from "../Context/UserContext";
 
 export default function QuesitonTemplate({ dataQuestion }) {
   const [listData, setListData] = useState([]);
@@ -13,8 +14,9 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const [quesitons, setQuestions] = useState([]);
   const [questionsErr, setQuestionsErr] = useState([]); // qs err cua exam hien tai
   const [questionsCorrect, setQuestionsCorrect] = useState([]);
-  const indexQuestion = useRef(1);
   const [autoNextQs, setAutoNextQs] = useState(true);
+  const indexQuestion = useRef(1);
+  const { userData } = useContext(UserContext);
   const [score, setScore] = useState({
     state: false,
     show: false,
@@ -58,17 +60,17 @@ export default function QuesitonTemplate({ dataQuestion }) {
         const listErr = questionsErr.map((item) => item.id);
         const listCorrect = questionsCorrect.map((item) => item);
         const url =
-          "http://localhost/BaoCaoPHP/server/controllers/questionsError/updateQuestions.php";
+          "http://localhost/BaoCaoPHP/Server/API/controllers/questionError/updateQuestions.php";
         const res = await axios.get(
           url + "?listerr=" + listErr + "&listcorrect=" + listCorrect
         );
-        console.log(res);
+
         //  update ques err by user
-        const dataLocal = await JSON.parse(localStorage.getItem("acc"));
+        const dataLocal = userData;
         if (dataLocal !== null) {
           if (dataLocal.email !== null || dataLocal.userID !== null) {
             const url =
-              "http://localhost/BaoCaoPHP/server/controllers/user/updateQsErrByUser.php";
+              "http://localhost/BaoCaoPHP/Server/API/controllers/user/updateQsErrByUser.php";
             const data = {
               email: dataLocal.email,
               userID: dataLocal.userID,
@@ -147,8 +149,8 @@ export default function QuesitonTemplate({ dataQuestion }) {
     });
 
     //handle change select listdata
-    for (var item of listData) {
-      if (item.zindex === id) {
+    for (let item of listData) {
+      if (item.id == id) {
         item.selected = z;
       }
     }
@@ -156,66 +158,66 @@ export default function QuesitonTemplate({ dataQuestion }) {
     //handle auto next question
     handleAutoNextQuestion();
   };
-
   const handleCalculatorScore = () => {
-    if(score.state){
+    // if(score.state){ nho su a lai
+    if (score.state) {
       handleTimeOut();
-    var countTrue = 0;
-    var countMustTrue = 0;
-    var countTrueMustTrue = 0;
-    listData.forEach((element) => {
-      if (element.selected === element.trueAnswer) {
-        countTrue++;
-        setQuestionsCorrect((prevState) => {
-          return [...prevState, element.id];
-        });
-      }
-      // Neu sai luu vao state qsErr
-      else {
-        if (questionsErr.length === 0 && questionsErr === null) {
-          questionsErr([{ id: element.id, count: 1 }]);
-        } else {
-          setQuestionsErr((prevState) => {
-            var check = prevState.find((item) => item.id === element.id);
-
-            if (check) {
-              const newQsErr = [{ id: check.id, count: check.count + 1 }];
-              const qsErrFilter = prevState.filter(
-                (item) => item.id !== element.id
-              );
-              return [...newQsErr, ...qsErrFilter];
-            } else {
-              const newQsErr = [{ id: element.id, count: 1 }];
-              return [...newQsErr, ...prevState];
-            }
+      var countTrue = 0;
+      var countMustTrue = 0;
+      var countTrueMustTrue = 0;
+      listData.forEach((element) => {
+        if (element.selected === element.trueAnswer) {
+          countTrue++;
+          setQuestionsCorrect((prevState) => {
+            return [...prevState, element.id];
           });
         }
-      }
-      if (element.mustCorrect === true) {
-        countMustTrue++;
-        if (element.selected === element.trueAnswer) {
-          countTrueMustTrue++;
-        }
-      }
-    });
+        // Neu sai luu vao state qsErr
+        else {
+          if (questionsErr.length === 0 && questionsErr === null) {
+            questionsErr([{ id: element.id, count: 1 }]);
+          } else {
+            setQuestionsErr((prevState) => {
+              var check = prevState.find((item) => item.id === element.id);
 
-    // Show ket qua
-    setScore((prevState) => {
-      return {
-        ...prevState,
-        state: true,
-        show: true,
-        countTrue: countTrue,
-        countMustTrue: countMustTrue,
-        countTrueMustTrue: countTrueMustTrue,
-        pass:
-          countMustTrue === countTrueMustTrue &&
-          countMustTrue > 0 &&
-          countTrue >= 21
-            ? true
-            : false,
-      };
-    });
+              if (check) {
+                const newQsErr = [{ id: check.id, count: check.count + 1 }];
+                const qsErrFilter = prevState.filter(
+                  (item) => item.id !== element.id
+                );
+                return [...newQsErr, ...qsErrFilter];
+              } else {
+                const newQsErr = [{ id: element.id, count: 1 }];
+                return [...newQsErr, ...prevState];
+              }
+            });
+          }
+        }
+        if (element.mustCorrect === true) {
+          countMustTrue++;
+          if (element.selected === element.trueAnswer) {
+            countTrueMustTrue++;
+          }
+        }
+      });
+
+      // Show ket qua
+      setScore((prevState) => {
+        return {
+          ...prevState,
+          state: true,
+          show: true,
+          countTrue: countTrue,
+          countMustTrue: countMustTrue,
+          countTrueMustTrue: countTrueMustTrue,
+          pass:
+            countMustTrue === countTrueMustTrue &&
+            countMustTrue > 0 &&
+            countTrue >= 21
+              ? true
+              : false,
+        };
+      });
     }
   };
 
@@ -235,6 +237,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
   const handleChangeAutoNext = () => {
     autoNextQs ? setAutoNextQs(false) : setAutoNextQs(true);
   };
+
   const handle = () => {};
   return (
     <>
@@ -284,38 +287,24 @@ export default function QuesitonTemplate({ dataQuestion }) {
                               }
                               flex`}
                               onClick={() =>
-                                handleSelected(currentQuestion.zindex, z)
+                                handleSelected(currentQuestion.id, z)
                               }
                             >
                               <input
                                 type="checkbox"
                                 checked={quesitons.some(
                                   (item) =>
-                                    item.id === currentQuestion.zindex &&
+                                    item.id === currentQuestion.id &&
                                     item.selected === z
                                 )}
                                 onChange={handle}
                               />
-                              <span>{z + 1}.&nbsp; </span>
+                              <span>&nbsp; </span>
                               <p>{rep}</p>
                             </li>
                           ))}
                         </ul>
                       </div>
-                      {score.show && (
-                        <div
-                          className={`${
-                            currentQuestion.hint ? "hint-qs" : ""
-                          } line-hint-qs`}
-                        >
-                          <p>
-                            <b>Đáp án {currentQuestion.trueAnswer + 1}</b>
-                          </p>
-                          {currentQuestion.hint && (
-                            <p>Giải thích: {currentQuestion.hint}</p>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </li>
                 </div>

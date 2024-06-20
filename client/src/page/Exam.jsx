@@ -9,13 +9,14 @@ export default function Exam(props) {
   const [allExam, setAllExam] = useState([]);
   const [currentExam, setCurrentExam] = useState({
     state: false,
-    index: null,
-    data: null,
+    id: null,
+    name: null,
   });
 
   useEffect(() => {
     const fetch = async () => {
-      const url = "http://localhost/BaoCaoPHP/server/controllers/exam/exam.php";
+      const url =
+        "http://localhost/BaoCaoPHP/Server/API/controllers/exam/titleExam.php";
       const data = await axios.get(url);
       if (data.status === 200) {
         setAllExam(data.data);
@@ -26,10 +27,10 @@ export default function Exam(props) {
   const handleClick = () => {
     props.unComponent();
   };
-  const handleShowExam = (data, index) => {
+  const handleShowExam = (id, name) => {
     setCurrentExam({
-      index: index,
-      data: data,
+      id: id,
+      name: name,
       state: true,
     });
   };
@@ -53,25 +54,29 @@ export default function Exam(props) {
               </div>
               <div>
                 <ul className="wrap-list flex">
-                  {allExam.map((data, index) => (
-                    <li key={index} onClick={() => handleShowExam(data, index)}>
-                      <div className="exam-cart ">
-                        <div className="flex">
-                          <IoBookOutline className="book-icon" />
-                          <p>đề số {index + 1}</p>
+                  {allExam.length > 0 &&
+                    allExam.map((data, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleShowExam(data.id, data.name)}
+                      >
+                        <div className="exam-cart ">
+                          <div className="flex">
+                            <IoBookOutline className="book-icon" />
+                            <p>đề {data.name}</p>
+                          </div>
+                          <p style={{ margin: "0 5px" }}>---</p>
                         </div>
-                        <p style={{ margin: "0 5px" }}>---</p>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
-          ) : currentExam.data ? (
+          ) : currentExam.id ? (
             <ExamTopic
               btnTopic={handleUnShow}
-              dataQuestion={currentExam.data}
-              index={currentExam.index}
+              id={currentExam.id}
+              name={currentExam.name}
             />
           ) : (
             ""
@@ -82,24 +87,39 @@ export default function Exam(props) {
   );
 }
 
-function ExamTopic({ btnTopic, dataQuestion, index }) {
+function ExamTopic({ btnTopic, id, name }) {
+  const [dataQuestion, setDataQuestion] = useState("");
+  useEffect(() => {
+    const fetch = async () => {
+      const url = `http://localhost/BaoCaoPHP/Server/API/controllers/exam/exam.php?id=${id}`;
+      const data = await axios.get(url);
+      if (data.status === 200) {
+        setDataQuestion(data.data);
+      }
+    };
+    fetch();
+  }, []);
+
   const handleTopic = () => {
     btnTopic(false);
   };
+
   return (
     <>
-      <div>
-        <div className="box-exam">
-          <div className="title-exam flex">
-            <IoMdArrowBack onClick={handleTopic} className="icon-back" />
+      {dataQuestion && (
+        <div>
+          <div className="box-exam">
+            <div className="title-exam flex">
+              <IoMdArrowBack onClick={handleTopic} className="icon-back" />
 
-            <h3 className="bold">đề số {index + 1} hạng a1</h3>
-          </div>
-          <div>
-            <QuestionTemplate dataQuestion={dataQuestion} />
+              <h3 className="bold">đề {name} hạng a1</h3>
+            </div>
+            <div>
+              <QuestionTemplate dataQuestion={dataQuestion} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

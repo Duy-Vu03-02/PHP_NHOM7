@@ -16,7 +16,7 @@ export default function AllKnowledge(props) {
   useEffect(() => {
     const fetch = async () => {
       const url =
-        "http://localhost/BaoCaoPHP/server/controllers/allknowledge/titleChapter.php";
+        "http://localhost/BaoCaoPHP/Server/API/controllers/allknowledge/titleChapter.php";
       const response = await axios.get(url);
 
       if (response.status === 200) {
@@ -61,10 +61,7 @@ export default function AllKnowledge(props) {
                     <div className="lesson">
                       <div>
                         <h3>{data.title}</h3>
-                        <p>
-                          Hạng A1 gồm {data.totalQuestion}/{data.totalQuestion}.
-                          Số câu điểm liệt {data.totalCritical}
-                        </p>
+                        <p>{data.description}</p>
                       </div>
                     </div>
                   </li>
@@ -84,7 +81,7 @@ function Lesson({ arrowBack, data }) {
   useEffect(() => {
     const fetch = async () => {
       const url =
-        "http://localhost/BaoCaoPHP/server/controllers/allknowledge/contentChapter.php";
+        "http://localhost/BaoCaoPHP/Server/API/controllers/allknowledge/contentChapter.php";
       const response = await axios.get(url + "?id=" + data.id);
 
       if (response.status === 200) {

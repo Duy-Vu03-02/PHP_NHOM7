@@ -12,7 +12,7 @@ export default function ExamRandom(props) {
   useEffect(() => {
     const fetch = async () => {
       const url =
-        "http://localhost/BaoCaoPHP/server/controllers/examRandom/examRandom.php";
+        "http://localhost/BaoCaoPHP/Server/API/controllers/examRandom/examRandom.php";
       const data = await axios.get(url);
 
       if (data.status === 200) {

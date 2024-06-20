@@ -10,7 +10,7 @@ export default function Footer() {
         <p className="footer">2024 onthigplx.vn</p>
         <FaRegFaceSmile className="copyright" />
         <p className="footer">
-          Website được tạo bởi <Link>Nhóm 7</Link>
+          Website được tạo bởi <Link>Nhóm 24</Link>
         </p>
       </div>
     </>

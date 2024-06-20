@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import logo from "../data/png/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import "../resources/component/header.css";
@@ -10,9 +10,11 @@ import { jwtDecode } from "jwt-decode";
 import { FaFacebook } from "react-icons/fa";
 import FacebookLogin from "react-facebook-login";
 import axios from "axios";
+import { UserContext } from "../Context/UserContext";
 
 export default function Header() {
-  const navigate = useNavigate();
+  // data conext
+  const { userData, setUserData } = useContext(UserContext);
   const [boxLogin, setBoxLogin] = useState(false);
   const [checkbox, setCheckBox] = useState(false);
   const [dataLocal, setDataLocal] = useState(null);
@@ -24,57 +26,98 @@ export default function Header() {
     userID: "",
   });
 
-  const storeLocal = (data) => {
-    if (data !== null) {
-      localStorage.setItem("acc", JSON.stringify(data));
-    }
-    setDataLocal(data);
-  };
-  const storeDB = async (data) => {
-    console.log("checj");
-    const url =
-      "http://localhost/BaoCaoPHP/server/controllers/user/loginUser.php";
-    try {
-      const response = await axios.post(url, data);
-      const resData = response.data;
-      console.log(response);
-      if (resData !== null || resData !== undefined) {
-        // set questionerr in local
-        if (resData.questionerr) {
-          let listID = JSON.parse(resData.questionerr);
-          listID = listID.map((item) => ({ id: parseInt(item), count: 1 }));
-          listID = listID.length > 25 ? listID.splice(0, 25) : listID;
-          localStorage.setItem("question_err", JSON.stringify(listID));
-        }
-        // set user infor local
-        storeLocal({
-          provider: data.provider,
-          email: resData.email,
-          name: resData.name,
-          picture: resData.picture,
-          userID: resData.userID,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     const fetch = async () => {
       const res = await JSON.parse(localStorage.getItem("showLogin"));
-      const data = await JSON.parse(localStorage.getItem("acc"));
-      if (data !== null) {
-        setDataLocal(data);
-      } else if (res === false) {
+      if (res === false) {
         setCheckBox(true);
         setBoxLogin(false);
-      } else if (res !== false && dataLocal === null) {
+      } else {
+        setCheckBox(false);
         setBoxLogin(true);
       }
     };
     fetch();
   }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await JSON.parse(localStorage.getItem("acc"));
+      if (data != null) {
+        const url =
+          "http://localhost/BaoCaoPHP/Server/API/controllers/user/loginUser.php";
+        const response = await axios.post(url, data);
+        if (response.status === 200) {
+          const resData = response.data;
+          const temp = {
+            provider:
+              resData.facebook == null || resData.facebook === ""
+                ? "email"
+                : "facebook",
+            name: resData.name,
+            email: resData.email ? resData.email : null,
+            picture: resData.picture ? resData.picture : null,
+            userID: resData.userID != null ? resData.userID : null,
+            facebook: resData.facebook != null ? resData.facebook : null,
+          };
+          setDataLocal(temp);
+          setUserData(temp);
+          setBoxLogin(false);
+          setCheckBox(true);
+          localStorage.setItem("showLogin", JSON.stringify(false));
+          localStorage.setItem("acc", JSON.stringify(temp));
+          if (resData.questionerr) {
+            let listID = JSON.parse(resData.questionerr);
+            listID = listID.map((item) => ({ id: item, count: 1 }));
+            listID = listID.length >= 25 ? listID.splice(0, 25) : listID;
+            localStorage.setItem("question_err", JSON.stringify(listID));
+          }
+        }
+      }
+    };
+    fetch();
+  }, []);
+
+  const storeLocal = (data) => {
+    if (data != null) {
+      localStorage.setItem("acc", JSON.stringify(data));
+    }
+  };
+
+  const fetchDb = async (data) => {
+    if (data != null) {
+      const url =
+        "http://localhost/BaoCaoPHP/Server/API/controllers/user/loginUser.php";
+      const response = await axios.post(url, data);
+      if (response.status === 200) {
+        const resData = response.data;
+        const temp = {
+          provider:
+            resData.facebook == null || resData.facebook === ""
+              ? "email"
+              : "facebook",
+          name: resData.name,
+          email: resData.email ? resData.email : null,
+          picture: resData.picture ? resData.picture : null,
+          userID: resData.userID != null ? resData.userID : null,
+          facebook: resData.facebook != null ? resData.facebook : null,
+        };
+        setBoxLogin(false);
+        setCheckBox(true);
+        setDataLocal(temp);
+        setUserData(temp);
+        localStorage.setItem("showLogin", JSON.stringify(false));
+        storeLocal(temp);
+        if (resData.questionerr) {
+          let listID = JSON.parse(resData.questionerr);
+          listID = listID.map((item) => ({ id: item, count: 1 }));
+          listID = listID.length > 25 ? listID.splice(0, 25) : listID;
+          localStorage.setItem("question_err", JSON.stringify(listID));
+          window.history.go();
+        }
+      }
+    }
+  };
 
   const handleCheckBox = () => {
     checkbox ? setCheckBox(false) : setCheckBox(true);
@@ -88,7 +131,6 @@ export default function Header() {
   };
   const handleLogout = () => {
     localStorage.clear();
-    // navigate("/");
     window.history.go();
   };
   const handleShowSetting = (value) => {
@@ -102,6 +144,7 @@ export default function Header() {
       };
     });
   };
+
   const handleUpdateUser = async () => {
     const data = {
       provider: dataLocal.provider,
@@ -121,20 +164,12 @@ export default function Header() {
       data.email = dataUpdate.email;
     }
     const url =
-      "http://localhost/BaoCaoPHP/server/controllers/user/updateInfoUser.php";
+      "http://localhost/BaoCaoPHP/Server/API/controllers/user/updateInfoUser.php";
     const response = await axios.post(url, data);
     if (response.status === 200) {
-      const lastProvider = await JSON.parse(localStorage.getItem("acc"))
-        .provider;
-
-      storeLocal({
-        provider: lastProvider,
-        email: data.email,
-        name: data.username,
-        userID: data.userID,
-        picture: data.picture,
-      });
+      setUserData(data);
     }
+
     setShowSetting(false);
   };
 
@@ -183,6 +218,7 @@ export default function Header() {
                       placeholder={
                         dataLocal.email ? dataLocal.email : "Nhập email"
                       }
+                      disabled={userData.email ? true : false}
                     />
                   </div>
                   <div className="change-avartar flex">
@@ -209,7 +245,9 @@ export default function Header() {
         <div className="header flex">
           <div className="left-header flex">
             <img src={logo} alt="logo" />
-            <Link to="/">Trang chủ</Link>
+            <Link to="http://localhost/BaoCaoPHP/Server/admin/adminCommon/Login.php">
+              Admin
+            </Link>
             <Link to="/">Tin Tức</Link>
             <Link to="/">Xốp hơi</Link>
             <Link to="/">PE foam</Link>
@@ -240,11 +278,10 @@ export default function Header() {
           <div className="screen-mask">
             <div className="box-login">
               <div className="bar-login flex">
-                <p className="bold">Tài khoản</p>
-                <IoMdClose
-                  className="icon-close"
-                  onClick={() => handleBoxLogin(false)}
-                />
+                <div className="flex" onClick={() => handleBoxLogin(false)}>
+                  <p className="bold">Tài khoản</p>
+                  <IoMdClose className="icon-close" />
+                </div>
               </div>
               <div className="choie-login">
                 <p>
@@ -256,19 +293,17 @@ export default function Header() {
                     onSuccess={(credentialResponse) => {
                       if (credentialResponse.credential !== null) {
                         const decode = jwtDecode(credentialResponse.credential);
-                        const data = {
+                        const resData = {
                           provider: "email",
                           name: decode.name,
                           email: decode.email ? decode.email : null,
                           picture: decode.picture ? decode.picture : null,
                           userID: null,
                         };
-                        storeDB(data);
-                        setBoxLogin(false);
+                        fetchDb(resData);
                       }
                     }}
                     onError={() => {
-                      setDataLocal(null);
                       setBoxLogin(true);
                     }}
                   />
@@ -293,7 +328,7 @@ export default function Header() {
                         response.status !== "unknown" &&
                         response.data !== null
                       ) {
-                        const data = {
+                        const resData = {
                           provider: "facebook",
                           name: response.name,
                           email: null,
@@ -302,10 +337,8 @@ export default function Header() {
                             : null,
                           userID: response.userID,
                         };
-                        storeDB(data);
-                        setBoxLogin(false);
+                        fetchDb(resData);
                       } else {
-                        setDataLocal(null);
                         setCheckBox(true);
                       }
                     }}

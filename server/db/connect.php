@@ -3,7 +3,7 @@
     $server = "localhost";
     $user = "root";
     $pass = "";
-    $db = "gplx";
+    $db = "gplx_db";
 
     $conn = new mysqli($server, $user, $pass, $db);
 

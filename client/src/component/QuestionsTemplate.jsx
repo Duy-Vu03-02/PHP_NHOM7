@@ -139,7 +139,7 @@ export default function QuestionsTemplate({ dataQuestion, result, handleReq }) {
                             onChange={handle}
                           />
 
-                          <span>{z + 1}.&nbsp; </span>
+                          {/* <span>{z + 1}.&nbsp; </span> */}
                           <p>{rep}</p>
                         </li>
                       ))}

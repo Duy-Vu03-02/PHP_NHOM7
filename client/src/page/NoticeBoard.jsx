@@ -10,11 +10,11 @@ export default function NoticeBoard(props) {
     state: ["5"],
     index: [],
   });
-  console.log(show);
+
   useEffect(() => {
     const fetch = async () => {
-      const data = await axios.post(
-        "http://localhost/BaoCaoPHP/server/controllers/noticeBoard/titleNoticeBoard.php"
+      const data = await axios.get(
+        "http://localhost/BaoCaoPHP/Server/API/controllers/noticeBoard/titleNoticeBoard.php"
       );
       if (data.status === 200) {
         setListData(data.data);
@@ -46,7 +46,7 @@ export default function NoticeBoard(props) {
 
   return (
     <>
-      <div>
+      <div style={{ maxHeight: "calc(100vh - 65px)", overflowY: "auto" }}>
         <div className="box-exam">
           <div className="title-exam flex">
             <IoMdArrowBack onClick={handleClick} className="icon-back" />
@@ -54,37 +54,38 @@ export default function NoticeBoard(props) {
           </div>
           <div className="groups-title">
             <ul className="wrap-groups">
-              {listData.map((data, index) => (
-                <li key={index}>
-                  <div
-                    className="title-group flex"
-                    onClick={() => handleShow(data.id)}
-                  >
-                    <IoChevronBackOutline
-                      className={`back-icon ${
+              {listData &&
+                listData.map((data, index) => (
+                  <li key={index}>
+                    <div
+                      className="title-group flex"
+                      onClick={() => handleShow(data.id)}
+                    >
+                      <IoChevronBackOutline
+                        className={`back-icon ${
+                          show.state.some((item) => item === data.id)
+                            ? "back-icon-active"
+                            : ""
+                        }`}
+                      />
+                      <span>[{data.count}]</span>
+                      <p>{data.title}</p>
+                    </div>
+                    <div
+                      className={`${
                         show.state.some((item) => item === data.id)
-                          ? "back-icon-active"
-                          : ""
+                          ? "block"
+                          : "none"
                       }`}
-                    />
-                    <span>[{data.count}]</span>
-                    <p>{data.title}</p>
-                  </div>
-                  <div
-                    className={`${
-                      show.state.some((item) => item === data.id)
-                        ? "block"
-                        : "none"
-                    }`}
-                  >
-                    {show.state.some((item) => item === data.id) ? (
-                      <ShowType indexData={data.id} />
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </li>
-              ))}
+                    >
+                      {show.state.some((item) => item === data.id) ? (
+                        <ShowType indexData={data.id} />
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>
@@ -99,7 +100,7 @@ function ShowType({ indexData }) {
   useEffect(() => {
     const fetch = async () => {
       const data = await axios.get(
-        `http://localhost/BaoCaoPHP/server/controllers/noticeBoard/contentNoticeBoard.php?index=${indexData}`
+        `http://localhost/BaoCaoPHP/Server/API/controllers/noticeBoard/contentNoticeBoard.php?index=${indexData}`
       );
       if (data.status === 200) {
         setListdata(data.data);

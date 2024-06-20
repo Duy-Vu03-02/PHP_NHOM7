@@ -17,7 +17,7 @@ export default function CriticalQuestion(props) {
   useEffect(() => {
     const fetch = async () => {
       const url =
-        "http://localhost/BaoCaoPHP/server/controllers/criticalQuestion/criticalQuestion.php";
+        "http://localhost/BaoCaoPHP/Server/API/controllers/criticalQuestion/criticalQuestion.php";
       const response = await axios.get(url);
 
       if (response.status === 200) {
