@@ -1,11 +1,16 @@
 <?php
     include "../../db/connect.php";
     include "../../model/Question.php";
-    include "../middleware/index.php";
+    
+    header("Access-Control-Allow-Origin:*");
+    header("Access-Control-Allow-Methods:GET,POST");
+    header("Access-Control-Allow-Headers: Content-Type,Authorization");
+    header("Access-Control-Allow-Credentials:true");
+    header("Content-Type: application/json");
 
-
-    if($_SERVER["REQUEST_METHOD"] === "GET"){
-        $action = isset($_GET["action"]) ? $_GET["action"] : "";
+    if($_SERVER["REQUEST_METHOD"] === "POST"){
+        $dataPost = json_decode(file_get_contents("php://input"), true);
+        $action = isset($dataPost["action"]) ? $dataPost["action"] : "";
         $listID = explode(",", $action);
         if(count($listID) > 0){
             $data = array();

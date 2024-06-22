@@ -36,14 +36,14 @@
                         SET questionerr = '$mergeList'
                         WHERE id = '$id'";
                 if($conn->query($update)){
-                    http_response_code(204);
+                    http_response_code(200);
                 }
                 else{
-                    http_response_code(403);
+                    http_response_code(204);
                 }
             }
             else{
-                http_response_code(404);
+                http_response_code(204);
             }
         }
     }

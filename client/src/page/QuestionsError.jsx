@@ -22,9 +22,13 @@ export default function QuesitionsError(props) {
         const urlUser =
           "http://localhost/BaoCaoPHP/Server/controllers/questionsError/getQuestionsErrorForUser.php";
 
-        const responseUser = await axios.get(urlUser + "?action=" + listId, {
-          withCredentials: true,
-        });
+        const responseUser = await axios.post(
+          urlUser,
+          { action: listId },
+          {
+            withCredentials: true,
+          }
+        );
         if (responseUser.status === 200) {
           setListDataUser(responseUser.data);
         }

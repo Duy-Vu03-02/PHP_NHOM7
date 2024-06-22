@@ -5,17 +5,20 @@
     header("Access-Control-Allow-Credentials:true");
     header("Content-Type: application/json");
 
-   if($_SERVER["REQUEST_METHOD"] == "POST" || $_SERVER["REQUEST_METHOD"] == "GET"){
+   if($_SERVER["REQUEST_METHOD"] == "POST"){
     $id = json_decode($_COOKIE["type"]) != "" ? json_decode($_COOKIE["type"]) : null;
     $ss = $_COOKIE["id"] != "" ? $_COOKIE["id"] : null;
     if($id && $ss){
         $userSS = $_SESSION["user"]["$id"] != "" ? $_SESSION["user"]["$id"] : null;
         if($userSS !== $ss){
-            // http_response_code(204);
+            http_response_code(204);
+        }
+        else{
+            http_response_code(200);
         }
     }
     else{
-        // http_response_code(204);
+        http_response_code(204);
     }
    }
 ?>
