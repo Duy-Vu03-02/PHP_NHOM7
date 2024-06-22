@@ -62,7 +62,8 @@ export default function QuesitonTemplate({ dataQuestion }) {
         const url =
           "http://localhost/BaoCaoPHP/Server/controllers/questionError/updateQuestions.php";
         const res = await axios.get(
-          url + "?listerr=" + listErr + "&listcorrect=" + listCorrect
+          url + "?listerr=" + listErr + "&listcorrect=" + listCorrect,
+          { withCredentials: true }
         );
 
         //  update ques err by user
@@ -77,16 +78,15 @@ export default function QuesitonTemplate({ dataQuestion }) {
               listID: listErr,
               provider: dataLocal.provider,
             };
-            const response = await axios.get(
-              url +
-                "?provider=" +
-                data.provider +
-                "&email=" +
-                data.email +
-                "&userID=" +
-                data.userID +
-                "&listID=" +
-                data.listID
+            const response = await axios.post(
+              url,
+              {
+                provider: data.provider,
+                email: data.email,
+                userID: data.userID,
+                listID: data.listID,
+              },
+              { withCredentials: true }
             );
           }
         }

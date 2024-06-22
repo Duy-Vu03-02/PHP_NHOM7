@@ -53,7 +53,7 @@ export default function Header() {
       if (data != null) {
         const url =
           "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
-        const response = await axios.post(url, data);
+        const response = await axios.post(url, data, { withCredentials: true });
         if (response.status === 200) {
           const resData = response.data;
           const temp = {
@@ -95,7 +95,7 @@ export default function Header() {
     if (data != null) {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
-      const response = await axios.post(url, data);
+      const response = await axios.post(url, data, { withCredentials: true });
       if (response.status === 200) {
         const resData = response.data;
         const temp = {
@@ -172,12 +172,21 @@ export default function Header() {
     }
     const url =
       "http://localhost/BaoCaoPHP/Server/controllers/user/updateInfoUser.php";
-    const response = await axios.post(url, data);
+    const response = await axios.post(url, data, { withCredentials: true });
     if (response.status === 200) {
       setUserData(data);
     }
 
     setShowSetting(false);
+  };
+
+  const handleDelUser = async () => {
+    const url =
+      "http://localhost/BaoCaoPHP/Server/controllers/user/delUser.php";
+    const response = await axios.post(url, {}, { withCredentials: true });
+    console.log(response);
+    if (response.status === 200) {
+    }
   };
 
   const handle = () => {};
@@ -206,7 +215,18 @@ export default function Header() {
                   alt=""
                 />
                 <p>{stateUp ? dataUpdate.name : dataLocal.name}</p>
+                <div
+                  className="footer-setting flex"
+                  style={{ justifyContent: "center" }}
+                >
+                  <div className="btn-close">
+                    <button onClick={handleDelUser} style={{ width: "150px" }}>
+                      Xóa tài khoản
+                    </button>
+                  </div>
+                </div>
               </div>
+
               <div className="change-info">
                 <h4>Cập nhật thông tin cá nhân</h4>
                 <div className="change-detail">

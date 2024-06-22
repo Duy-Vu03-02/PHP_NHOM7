@@ -1,10 +1,10 @@
 <?php
     include "../../db/connect.php";
     include "../../model/Question.php";
-
+    
     header("Access-Control-Allow-Origin: http://localhost:3000");
     header("Access-Control-Allow-Methods: GET, POST");
-    header("Content-type: application/json");
+    header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $select = "SELECT * FROM question where critical = 1";

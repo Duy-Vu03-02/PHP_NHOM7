@@ -14,7 +14,6 @@ import Exam from "../page/Exam";
 import ExamRandom from "../page/ExamRandom";
 import NoticeBoard from "../page/NoticeBoard";
 import QuestionsError from "../page/QuestionsError";
-import { FaS } from "react-icons/fa6";
 
 export default function Home() {
   const [currentComponent, setCurrentComponent] = useState(null);

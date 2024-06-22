@@ -14,7 +14,7 @@ export default function ExamRandom(props) {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/examRandom/examRandom.php";
       const data = await axios.get(url);
-
+      console.log(data.data);
       if (data.status === 200) {
         setOption(data.data);
       }
