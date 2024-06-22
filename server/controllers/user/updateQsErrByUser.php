@@ -4,7 +4,7 @@
     
 
     if($_SERVER["REQUEST_METHOD"] === "POST"){
-        $dataPost = json_decode(file_get_contents("php://input", true));
+        $dataPost = json_decode(file_get_contents('php://input'), true);
         $provider = isset($dataPost["provider"]) ? $dataPost["provider"] : null;
         $email = isset($dataPost['email']) ? $dataPost["email"] : null;
         $userID = isset($dataPost['userID']) ? $dataPost["userID"] : null;
@@ -23,8 +23,8 @@
             if($result->num_rows >0){
                 $data = $result->fetch_assoc();
                 /// true la nhan ve kieu mang
+                
                 $oldList = json_decode($data["questionerr"], true);
-                $listID = explode(",",$listID);
                 $id = $data["id"];
 
                 // decode troc khi su dung

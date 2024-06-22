@@ -70,7 +70,7 @@ export default function QuesitonTemplate({ dataQuestion }) {
         if (dataLocal !== null) {
           if (dataLocal.email !== null || dataLocal.userID !== null) {
             const url =
-              "http://localhost/BaoCaoPHP/Server/controllers/user/updateQsErrByUser.php";
+              "http://localhost/BaoCaoPHP/Server/controllers/middleware/index.php";
             const data = {
               email: dataLocal.email,
               userID: dataLocal.userID,

@@ -38,8 +38,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 http_response_code(204);
             } else {
                 $id = isset($data->userID) && trim($data->userID) != "" ? $data->userID : $data->email;
-                setcookie("type", json_encode($id));
-                setcookie("id", genSession($id));
+                setcookie("type", json_encode($id), [
+                    'expires' => time() + (30 * 24 * 60 * 60), 
+                    'path' => '/', 
+                    'domain' => 'localhost',
+                    'secure' => false, 
+                    'httponly' => true 
+                ]);
+                        setcookie("id", genSession($id),[
+                            'expires' => time() + (30 * 24 * 60 * 60), 
+                            'path' => '/', 
+                            'domain' => 'localhost',
+                            'secure' => false, 
+                            'httponly' => true 
+                        ]);
                 echo json_encode($data);
                 http_response_code(200);
             }
@@ -60,8 +72,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         http_response_code(204);
                     } else {
                         $id = isset($userData['userID']) ? $userData['userID'] : $userData['email'];
-                        setcookie("type", json_encode($id));
-                        setcookie("id", genSession($id));
+                        setcookie("type", json_encode($id), [
+                            'expires' => time() + (30 * 24 * 60 * 60), 
+                            'path' => '/', 
+                            'domain' => 'localhost',
+                            'secure' => false, 
+                            'httponly' => true 
+                        ]);
+                        setcookie("id", genSession($id),[
+                            'expires' => time() + (30 * 24 * 60 * 60), 
+                            'path' => '/', 
+                            'domain' => 'localhost',
+                            'secure' => false, 
+                            'httponly' => true 
+                        ]);
+                        setcookie("id", genSession($id),[
+                            'expires' => time() + (30 * 24 * 60 * 60), 
+                            'path' => '/', 
+                            'domain' => 'localhost',
+                            'secure' => false, 
+                            'httponly' => true 
+                        ]);
                         echo json_encode($data);
                         http_response_code(200);
                     }
