@@ -22,12 +22,8 @@ export default function QuesitionsError(props) {
         const urlUser =
           "http://localhost/BaoCaoPHP/Server/controllers/questionsError/getQuestionsErrorForUser.php";
 
-        const responseUser = await axios.post(
-          urlUser,
-          { action: listId },
-          {
-            withCredentials: true,
-          }
+        const responseUser = await axios.get(
+          urlUser + "?action=" + JSON.stringify(listId)
         );
         if (responseUser.status === 200) {
           setListDataUser(responseUser.data);
@@ -49,7 +45,6 @@ export default function QuesitionsError(props) {
   const YourQuestionsError = (
     <QuestionsTemplate
       dataQuestion={listDataUser}
-      // checkedQs={() => handleCheckedQs(1)}
       result={resTemplate[0]}
       handleReq={() => handleRes(0)}
     />
@@ -57,7 +52,6 @@ export default function QuesitionsError(props) {
   const PeopleQuestionsError = (
     <QuestionsTemplate
       dataQuestion={listDataPeople}
-      // checkedQs={() => handleCheckedQs(1)}
       result={resTemplate[1]}
       handleReq={() => handleRes(1)}
     />

@@ -18,7 +18,6 @@ export default function Exam(props) {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/exam/titleExam.php";
       const data = await axios.get(url);
-      console.log(data);
       if (data.status === 200) {
         setAllExam(data.data);
       }

@@ -77,7 +77,9 @@ export default function QuesitonTemplate({ dataQuestion }) {
               listID: listErr,
               provider: dataLocal.provider,
             };
-            const resSto = await axios.post(url, {}, { withCredentials: true });
+            const resSto = await axios.post(url, data, {
+              withCredentials: true,
+            });
             console.log(resSto);
           }
         }
