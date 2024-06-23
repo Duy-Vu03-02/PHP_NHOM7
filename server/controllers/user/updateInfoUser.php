@@ -9,7 +9,7 @@
     header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "POST"){
-        echo json_encode(isset($_SESSION["logged_in"]));
+        echo json_encode($_COOKIE);
         $data = json_decode(file_get_contents('php://input'), true);
         $provider = isset($data['provider']) ? $data['provider'] : null;
         $oldEmail = isset($data['oldEmail']) ? $data['oldEmail'] : null;
