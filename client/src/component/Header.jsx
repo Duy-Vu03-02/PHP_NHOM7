@@ -95,7 +95,7 @@ export default function Header() {
     if (data != null) {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
-      const response = await axios.post(url, data);
+      const response = await axios.post(url, data, { withCredentials: true });
       if (response.status === 200) {
         const resData = response.data;
         const temp = {
@@ -172,10 +172,9 @@ export default function Header() {
     }
     const url =
       "http://localhost/BaoCaoPHP/server/controllers/user/updateInfoUser.php";
-    const response = await axios.post(url, data);
-    console.log(response);
+    const response = await axios.post(url, data, { withCredentials: true });
     if (response.status === 200) {
-      setUserData(data);
+      setUserData(response.data);
     }
 
     setShowSetting(false);
@@ -215,7 +214,7 @@ export default function Header() {
                   alt=""
                 />
                 <p>{stateUp ? dataUpdate.name : dataLocal.name}</p>
-                <div
+                {/* <div
                   className="footer-setting flex"
                   style={{ justifyContent: "center" }}
                 >
@@ -224,7 +223,7 @@ export default function Header() {
                       Xóa tài khoản
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="change-info">

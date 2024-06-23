@@ -28,7 +28,7 @@
         $arrayID = array();
         $question = array();
         $questionCritical = 2;
-        $questionNomal = 25 - $questionCritical;
+        $questionNomal = 5 - $questionCritical;
 
         while(count($arrayID) < $questionNomal){
             $rand = random_int(1,$total);

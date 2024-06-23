@@ -1,12 +1,13 @@
 <?php
-session_start();
-include "../../db/connect.php";
-include "../../model/User.php";
+    session_start();
+    include "../../db/connect.php";
+    include "../../model/User.php";
 
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Methods: GET, POST");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:3000");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Credentials: true");
+    header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -36,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 http_response_code(204);
             } else {
                 $_SESSION["logged_in"] = true;
-                $_SESSION["user_id"] = $userData["id"]; // Lưu ID của người dùng vào SESSION
                 echo json_encode($data);
                 http_response_code(200);
             }
@@ -56,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         http_response_code(204);
                     } else {
                         $_SESSION["logged_in"] = true;
-                        $_SESSION["user_id"] = $userData["id"]; // Lưu ID của người dùng vào SESSION
                         echo json_encode($data);
                         http_response_code(200);
                     }

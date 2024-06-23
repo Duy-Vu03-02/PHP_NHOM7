@@ -70,14 +70,14 @@ export default function QuesitonTemplate({ dataQuestion }) {
         if (dataLocal !== null) {
           if (dataLocal.email !== null || dataLocal.userID !== null) {
             const url =
-              "http://localhost/BaoCaoPHP/Server/controllers/middleware/index.php";
+              "http://localhost/BaoCaoPHP/server/controllers/user/updateQsErrByUser.php";
             const data = {
               email: dataLocal.email,
               userID: dataLocal.userID,
               listID: listErr,
               provider: dataLocal.provider,
             };
-            const resSto = await axios.post(url, data);
+            await axios.post(url, data, { withCredentials: true });
           }
         }
       }

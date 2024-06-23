@@ -3,56 +3,55 @@
     include "../../db/connect.php";
     
     header("Access-Control-Allow-Origin: http://localhost:3000");
-    header("Access-Control-Allow-Methods: GET, POST");
-    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Credentials: true");
     header("Content-Type: application/json");
 
-    if($_SERVER["REQUEST_METHOD"] === "POST" && $_SESSION["login"]){
-        $dataPost = json_decode(file_get_contents('php://input'), true);
-        $provider = isset($dataPost["provider"]) ? $dataPost["provider"] : null;
-        $email = isset($dataPost['email']) ? $dataPost["email"] : null;
-        $userID = isset($dataPost['userID']) ? $dataPost["userID"] : null;
-        $listID = isset($dataPost["listID"]) ? $dataPost["listID"]:null;
-
-        if($listID !== null){
-            $agile = '1=0';
-            if($provider === 'facebook' && $userID !== null){
-                $agile= "userID = '$userID'";
-            }
-            else if($provider === "email"  && $email !== null){
-                $agile = "email = '$email'";
-            }
-            $select = "SELECT id, questionerr FROM user WHERE ".$agile;
-            $result = $conn->query($select);
-            if($result->num_rows >0){
-                $data = $result->fetch_assoc();
-                /// true la nhan ve kieu mang
-                
-                $oldList = json_decode($data["questionerr"], true);
-                $id = $data["id"];
-
-                // decode troc khi su dung
-                $mergeList = empty($oldList) || $oldList == null ? $listID : ($listID + $oldList);
-                // encode truoc khi update
-                $mergeList = json_encode($mergeList);
-
-                $update = "UPDATE user
-                        SET questionerr = '$mergeList'
-                        WHERE id = '$id'";
-                if($conn->query($update)){
-                    http_response_code(200);
+    if($_SERVER["REQUEST_METHOD"] === "POST" ){
+        if(isset($_SESSION["logged_in"])){
+            $dataPost = json_decode(file_get_contents('php://input'), true);
+            $provider = isset($dataPost["provider"]) ? $dataPost["provider"] : null;
+            $email = isset($dataPost['email']) ? $dataPost["email"] : null;
+            $userID = isset($dataPost['userID']) ? $dataPost["userID"] : null;
+            $listID = isset($dataPost["listID"]) ? $dataPost["listID"]:null;
+    
+            if($listID !== null){
+                $agile = '1=0';
+                if($provider === 'facebook' && $userID !== null){
+                    $agile= "userID = '$userID'";
                 }
-                else{
-                    http_response_code(204);
+                else if($provider === "email"  && $email !== null){
+                    $agile = "email = '$email'";
                 }
-            }
-            else{
-                http_response_code(204);
+                $select = "SELECT id, questionerr FROM user WHERE ".$agile;
+                $result = $conn->query($select);
+                if($result->num_rows >0){
+                    $data = $result->fetch_assoc();
+                    /// true la nhan ve kieu mang
+                    
+                    $oldList = json_decode($data["questionerr"], true);
+                    $id = $data["id"];
+    
+                    // decode troc khi su dung
+                    $mergeList = empty($oldList) || $oldList == null ? $listID : ($listID + $oldList);
+                    // encode truoc khi update
+                    $mergeList = json_encode($mergeList);
+    
+                    $update = "UPDATE user
+                            SET questionerr = '$mergeList'
+                            WHERE id = '$id'";
+                    if($conn->query($update)){
+                        http_response_code(200);
+                    }
+                    else{
+                        http_response_code(204);
+                    }
+                }
             }
         }
-    }
-    else{
-        http_response_code(404);
-        echo json_encode(array("mess" => "Something went wrong"));
+        else{
+            http_response_code(204);
+        }
     }
 ?>
