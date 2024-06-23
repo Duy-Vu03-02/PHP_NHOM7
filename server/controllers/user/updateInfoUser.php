@@ -1,10 +1,15 @@
 <?php
+    session_start();
     include "../../db/connect.php";
     include "../../model/User.php";
-    include "../middleware/index.php";
-
+    
+    header("Access-Control-Allow-Origin: http://localhost:3000");
+    header("Access-Control-Allow-Methods: GET, POST");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Content-Type: application/json");
 
     if($_SERVER["REQUEST_METHOD"] === "POST"){
+        echo json_encode(isset($_SESSION["logged_in"]));
         $data = json_decode(file_get_contents('php://input'), true);
         $provider = isset($data['provider']) ? $data['provider'] : null;
         $oldEmail = isset($data['oldEmail']) ? $data['oldEmail'] : null;
@@ -34,9 +39,12 @@
                             WHERE id = '$id'";
                     $resUpdate = $conn->query($update);
                     if($resUpdate){
-                        $response = new User($data);
-                        echo json_encode($response);
-                        http_response_code(200);
+                        $newRes = $conn->query($select);
+                        if($newRes->num_rows > 0){
+                            $newUser = new User($newRes->fetch_assoc());
+                            echo json_encode($newUser);
+                            http_response_code(200);
+                        }
                     }                    
                 }
                 else{

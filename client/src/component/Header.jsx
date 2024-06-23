@@ -53,7 +53,7 @@ export default function Header() {
       if (data != null) {
         const url =
           "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
-        const response = await axios.post(url, data, { withCredentials: true });
+        const response = await axios.post(url, data);
         if (response.status === 200) {
           const resData = response.data;
           const temp = {
@@ -95,7 +95,7 @@ export default function Header() {
     if (data != null) {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
-      const response = await axios.post(url, data, { withCredentials: true });
+      const response = await axios.post(url, data);
       if (response.status === 200) {
         const resData = response.data;
         const temp = {
@@ -171,8 +171,9 @@ export default function Header() {
       data.email = dataUpdate.email;
     }
     const url =
-      "http://localhost/BaoCaoPHP/Server/controllers/user/updateInfoUser.php";
-    const response = await axios.post(url, data, { withCredentials: true });
+      "http://localhost/BaoCaoPHP/server/controllers/user/updateInfoUser.php";
+    const response = await axios.post(url, data);
+    console.log(response);
     if (response.status === 200) {
       setUserData(data);
     }
@@ -183,8 +184,7 @@ export default function Header() {
   const handleDelUser = async () => {
     const url =
       "http://localhost/BaoCaoPHP/Server/controllers/user/delUser.php";
-    const response = await axios.post(url, {}, { withCredentials: true });
-    console.log(response);
+    const response = await axios.post(url);
     if (response.status === 200) {
     }
   };
@@ -294,11 +294,7 @@ export default function Header() {
                   }
                   alt="img-avatar"
                 />
-                <p>
-                  {stateUp && dataUpdate.name
-                    ? dataUpdate.name
-                    : dataLocal.name}
-                </p>
+                <p>{userData.name}</p>
                 <div className="box-logout">
                   <div className="flex" onClick={() => handleShowSetting(true)}>
                     <FiSettings className="icon-setting" />

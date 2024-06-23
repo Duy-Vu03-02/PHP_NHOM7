@@ -4,6 +4,7 @@
 
     header("Access-Control-Allow-Origin: http://localhost:3000");
     header("Access-Control-Allow-Methods: GET, POST");
+    header("Access-Control-Allow-Headers: Content-Type");
     header("Content-Type: application/json");
 
    if($_SERVER["REQUEST_METHOD"] === "GET" ){
@@ -27,7 +28,7 @@
         $arrayID = array();
         $question = array();
         $questionCritical = 2;
-        $questionNomal = 5 - $questionCritical;
+        $questionNomal = 25 - $questionCritical;
 
         while(count($arrayID) < $questionNomal){
             $rand = random_int(1,$total);

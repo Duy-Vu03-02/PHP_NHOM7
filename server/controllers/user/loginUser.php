@@ -3,10 +3,9 @@ session_start();
 include "../../db/connect.php";
 include "../../model/User.php";
 
-header("Access-Control-Allow-Origin:http://localhost:3000");
-header("Access-Control-Allow-Methods:GET,POST");
-header("Access-Control-Allow-Headers: Content-Type,Authorization");
-header("Access-Control-Allow-Credentials:true");
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST");
+header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -27,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $select = "SELECT * FROM user WHERE " . $agile;
 
     if ($email !== null || $userID !== null) {
-        $data = array();
         $result = $conn->query($select);
 
         if ($result->num_rows > 0) {
@@ -37,21 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($data === null) {
                 http_response_code(204);
             } else {
-                $id = isset($data->userID) && trim($data->userID) != "" ? $data->userID : $data->email;
-                setcookie("type", json_encode($id), [
-                    'expires' => time() + (30 * 24 * 60 * 60), 
-                    'path' => '/', 
-                    'domain' => 'localhost',
-                    'secure' => false, 
-                    'httponly' => true 
-                ]);
-                        setcookie("id", genSession($id),[
-                            'expires' => time() + (30 * 24 * 60 * 60), 
-                            'path' => '/', 
-                            'domain' => 'localhost',
-                            'secure' => false, 
-                            'httponly' => true 
-                        ]);
+                $_SESSION["logged_in"] = true;
+                $_SESSION["user_id"] = $userData["id"]; // Lưu ID của người dùng vào SESSION
                 echo json_encode($data);
                 http_response_code(200);
             }
@@ -61,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $resInsert = $conn->query($insert);
 
             if ($resInsert) {
-                $data = array();
                 $result = $conn->query($select);
 
                 if ($result->num_rows > 0) {
@@ -71,28 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if ($data === null) {
                         http_response_code(204);
                     } else {
-                        $id = isset($userData['userID']) ? $userData['userID'] : $userData['email'];
-                        setcookie("type", json_encode($id), [
-                            'expires' => time() + (30 * 24 * 60 * 60), 
-                            'path' => '/', 
-                            'domain' => 'localhost',
-                            'secure' => false, 
-                            'httponly' => true 
-                        ]);
-                        setcookie("id", genSession($id),[
-                            'expires' => time() + (30 * 24 * 60 * 60), 
-                            'path' => '/', 
-                            'domain' => 'localhost',
-                            'secure' => false, 
-                            'httponly' => true 
-                        ]);
-                        setcookie("id", genSession($id),[
-                            'expires' => time() + (30 * 24 * 60 * 60), 
-                            'path' => '/', 
-                            'domain' => 'localhost',
-                            'secure' => false, 
-                            'httponly' => true 
-                        ]);
+                        $_SESSION["logged_in"] = true;
+                        $_SESSION["user_id"] = $userData["id"]; // Lưu ID của người dùng vào SESSION
                         echo json_encode($data);
                         http_response_code(200);
                     }
@@ -100,10 +64,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
     }
-}
-function genSession($id) {
-    $idHash = hash("sha256", $id);
-    $_SESSION["user"]["$id"] = $idHash;
-    return $idHash;
 }
 ?>
