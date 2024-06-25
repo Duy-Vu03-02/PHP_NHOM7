@@ -6,6 +6,7 @@ import { LuClock } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
 import { FaRegStar } from "react-icons/fa6";
 import { UserContext } from "../Context/UserContext";
+import { FcIdea } from "react-icons/fc";
 
 export default function QuesitonTemplate({ dataQuestion }) {
   const [listData, setListData] = useState([]);
@@ -77,7 +78,10 @@ export default function QuesitonTemplate({ dataQuestion }) {
               listID: listErr,
               provider: dataLocal.provider,
             };
-            await axios.post(url, data, { withCredentials: true });
+            const resUser = await axios.post(url, data, {
+              withCredentials: true,
+            });
+            console.log(resUser);
           }
         }
       }
@@ -297,6 +301,13 @@ export default function QuesitonTemplate({ dataQuestion }) {
                             </li>
                           ))}
                         </ul>
+                        {score.show && currentQuestion.hint && (
+                          <div style={{ fontSize: "14px" }}>
+                            <FcIdea />
+                            <p className="block">Giải thích: </p>
+                            <p>{currentQuestion.hint}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </li>
@@ -378,6 +389,12 @@ export default function QuesitonTemplate({ dataQuestion }) {
                           ${data.selected !== null ? "item-select-ok" : ""}
                           flex`}
                           onClick={() => handleShowQuestion(data, index)}
+                          style={{
+                            border:
+                              currentQuestion.zindex == data.zindex
+                                ? "1px solid #299a"
+                                : undefined,
+                          }}
                         >
                           <div
                             className={`btn-select
