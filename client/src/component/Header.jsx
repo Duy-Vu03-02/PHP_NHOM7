@@ -96,6 +96,7 @@ export default function Header() {
       const url =
         "http://localhost/BaoCaoPHP/Server/controllers/user/loginUser.php";
       const response = await axios.post(url, data, { withCredentials: true });
+      console.log(response);
       if (response.status === 200) {
         const resData = response.data;
         const temp = {
@@ -183,7 +184,7 @@ export default function Header() {
   const handleDelUser = async () => {
     const url =
       "http://localhost/BaoCaoPHP/Server/controllers/user/delUser.php";
-    const response = await axios.post(url, { withCredentials: true });
+    const response = await axios.post(url, {}, { withCredentials: true });
     console.log(response);
     if (response.status === 200) {
     }

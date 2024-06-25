@@ -15,6 +15,7 @@
             if($temp["img"] !== "" && $temp["img"] !== null){
                 $this->img = $temp["img"];
             }
+            $this->hint = $temp["hint"];
             $this->answer = explode(".,",$temp["answers"]);
             $this->trueAnswer = (int)$temp["answer"] ;
             $this->mustCorrect = (boolval($temp["critical"]));

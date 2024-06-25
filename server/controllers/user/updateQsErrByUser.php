@@ -28,18 +28,19 @@
                 $result = $conn->query($select);
                 if($result->num_rows >0){
                     $data = $result->fetch_assoc();
-                    /// true la nhan ve kieu mang
-                    
+
+                    // decode troc khi su dung
                     $oldList = json_decode($data["questionerr"], true);
                     $id = $data["id"];
     
-                    // decode troc khi su dung
-                    $mergeList = empty($oldList) || $oldList == null ? $listID : ($listID + $oldList);
-                    // encode truoc khi update
-                    $mergeList = json_encode($mergeList);
-    
+                    if($oldList != null){
+                        foreach($oldList as $item){
+                            $listID[] = $item;
+                        }
+                    }
+                    $listID = json_encode($listID);
                     $update = "UPDATE user
-                            SET questionerr = '$mergeList'
+                            SET questionerr = '$listID'
                             WHERE id = '$id'";
                     if($conn->query($update)){
                         http_response_code(200);

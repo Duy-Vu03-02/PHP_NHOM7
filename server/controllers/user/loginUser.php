@@ -37,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 http_response_code(204);
             } else {
                 $_SESSION["logged_in"] = true;
+                // $_SESSION["id_user"] = $userData["id"];
                 echo json_encode($data);
                 http_response_code(200);
             }
@@ -56,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         http_response_code(204);
                     } else {
                         $_SESSION["logged_in"] = true;
+                        // $_SESSION["id_user"] = $userData["id"];
                         echo json_encode($data);
                         http_response_code(200);
                     }
