@@ -11,8 +11,18 @@
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if(isset($_SESSION["logged_in"])){
             $idUser = isset($_SESSION["id_user"]) ? $_SESSION["id_user"] : null;
-            echo json_encode($idUser);
-            echo json_encode($_SESSION["logged_in"]);
+            if(isset($idUser) && $idUser != null){
+                $del = "DELETE FROM user where id = '$idUser'";
+                $result = $conn->query($del);
+                if($result){
+                    http_response_code(200);
+                    session_unset();
+                    session_destroy();
+                }
+            }
+        }
+        else{
+            http_response_code(204);
         }
     }
 

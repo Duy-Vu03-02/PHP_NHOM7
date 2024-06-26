@@ -185,8 +185,9 @@ export default function Header() {
     const url =
       "http://localhost/BaoCaoPHP/Server/controllers/user/delUser.php";
     const response = await axios.post(url, {}, { withCredentials: true });
-    console.log(response);
     if (response.status === 200) {
+      localStorage.clear();
+      window.history.go();
     }
   };
 
